@@ -1,18 +1,21 @@
 package com.DavidDupre.github;
+import java.util.List;
+
+import com.DavidDupre.github.utils.Boundry;
 import com.DavidDupre.github.utils.Square;
 import com.DavidDupre.github.utils.Vector2D;
 
 public class Projectile {
 	public Vector2D position = new Vector2D();
+	private List<Boundry> boundries;
 	public double size = 50;
-	public Square image = new Square(size, "res/rang.png");
+	public Square image = new Square(size, "res/rang.png", boundries);
 	private double azimuth;
 	private double speed = 20;
-
 	boolean distancePassed = false;
 	private int projectileDistance;
 	
-	Projectile(double x, double y, Player entity) {
+	Projectile(double x, double y, Player entity, List<Boundry> boundries) {
 		position.set(x, y);
 		azimuth = entity.azimuth;
 		System.out.println(azimuth);

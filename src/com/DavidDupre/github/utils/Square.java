@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.List;
 
 import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureLoader;
@@ -17,8 +18,9 @@ public class Square {
 	public double theta = 0;
 	public Texture texture;
 	public boolean isFlipped = false;
+	public List<Boundry> boundries;
 	
-	public Square(double size, String imageUrl){
+	public Square(double size, String imageUrl, List<Boundry> boundries){
 		this.position = new Vector2D();
 		this.verticies = new Vector2D[4];
 		this.size = size;
@@ -26,6 +28,8 @@ public class Square {
 		verticies[1] = new Vector2D(size, -size);
 		verticies[2] = new Vector2D(size, size);
 		verticies[3] = new Vector2D(-size, size);
+		
+		this.boundries = boundries; 
 		
 		try{
 			this.texture = TextureLoader.getTexture("PNG", new FileInputStream(new File(imageUrl)));
@@ -74,5 +78,20 @@ public class Square {
 		glDisable(GL_TEXTURE_2D);
 		glEnd();
 		glPopMatrix();
+	}
+	
+	public void boundryDetection(Vector2D position) {
+		for (Boundry b : boundries) {
+			if (position.x > b.maxX-size){
+				position.x = b.maxX-size;
+			} else if (position.x < b.minX+size){
+				position.x = b.minX+size;
+			}
+			if (position.y > b.maxY-size) {
+				position.y = b.maxY-size;
+			} else if (position.y < b.minY+size) {
+				position.y = b.minY+size; 
+			}
+		}
 	}
 }

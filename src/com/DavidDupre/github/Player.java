@@ -1,7 +1,6 @@
 package com.DavidDupre.github;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 import com.DavidDupre.github.utils.Boundry;
@@ -10,41 +9,33 @@ import com.DavidDupre.github.utils.Vector2D;
 
 public class Player {
 	public Vector2D position = new Vector2D();
-	public double size = 50;
-	public Square image;
-	public double azimuth = 0;
-	public double speed = 5;
 	public int wobble = 0;
-	public List<Boundry> boundries = new ArrayList<Boundry>();
+	public double azimuth = 0;
+	
+	private double size = 50;
+	private Square image;
+	
+	private double speed = 5;
+	private List<Boundry> boundries;
 	
 	//Terrible variables that should probably go away
-	public int action = Actions.IDLE;
+	private int action = Actions.IDLE;
 	private boolean movementLocked = false;
 	private int rollCount = 0;
 	private double rollAzimuth;
-	private LinkedList<Projectile> projectile = new LinkedList<Projectile>();
+	private List<Projectile> projectiles = new ArrayList<Projectile>();
 
-	public Player(int x, int y, int size, String imageUrl) {
+	public Player(int x, int y, int size, String imageUrl, List<Boundry> boundries) {
+		this.boundries = boundries;
 		this.size = size;
 		position.x = x;
 		position.y = y;
-		this.image = new Square(size, imageUrl);
+		this.image = new Square(size, imageUrl, boundries);
 	}
 	
 	public void update() {
 		//Collision detection...sort of
-		for (Boundry b : boundries) {
-			if (position.x > b.maxX-size){
-				position.x = b.maxX-size;
-			} else if (position.x < b.minX+size){
-				position.x = b.minX+size;
-			}
-			if (position.y > b.maxY-size) {
-				position.y = b.maxY-size;
-			} else if (position.y < b.minY+size) {
-				position.y = b.minY+size; 
-			}
-		}
+		image.boundryDetection(position);
 		
 		this.image.theta = azimuth;
 		this.image.theta += Math.toDegrees(Math.sin(wobble))*.1;
@@ -63,19 +54,19 @@ public class Player {
 			}
 		}
 		
-		for (int i = 0; i < projectile.size(); i++) {
-			if (projectile.get(i).distancePassed) {
-				projectile.remove(i);
+		for (int i = 0; i < projectiles.size(); i++) { // Needs to have the for loop to reference the list and delete elements
+			if (projectiles.get(i).distancePassed) {
+				projectiles.remove(i);
 			}
 			
 			else {
-				projectile.get(i).update();
+				projectiles.get(i).update();
 			}
 		}
 	}
 
 	public void fire() {
-		projectile.add(new Projectile(position.x, position.y, this));
+		projectiles.add(new Projectile(position.x, position.y, this, boundries));
 	}
 	
 	public void draw() {

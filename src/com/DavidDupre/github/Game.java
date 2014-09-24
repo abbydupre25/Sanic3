@@ -1,5 +1,7 @@
 package com.DavidDupre.github;
 import java.awt.Font;
+import java.util.List;
+import java.util.ArrayList;
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
@@ -18,28 +20,26 @@ import org.newdawn.slick.TrueTypeFont;
 import com.DavidDupre.github.utils.Boundry;
 
 public class Game {
-	public static Player sanic;
-	public static Player tails;
-
+	private static List<Boundry> boundries = new ArrayList<Boundry>();
+	private static List<Player> players = new ArrayList<Player>();
+	
 	private static int width = 640;
 	private static int height = 480;
 
 	private static Music music;
 	public static TrueTypeFont font;
-
+	
 	public static void main(String[] args) throws SlickException {
 		init();
 		while (!Display.isCloseRequested()) {
 			glClear(GL_COLOR_BUFFER_BIT);
-
-			sanic.update();
-			tails.update();
-
-			sanic.draw();
-			tails.draw();
-
 			pollInput();
 
+			for (Player p: players) {
+				p.update();
+				p.draw();
+			}
+			
 			Display.update();
 			Display.sync(60);
 		}
@@ -75,75 +75,72 @@ public class Game {
 		Display.update();
 
 		Boundry mapEdge = new Boundry(0, width, 0, height);
-		sanic = new Player(width / 2, height / 2, 50, "res/sanic.png");
-		sanic.boundries.add(mapEdge);
-		tails = new Player(width / 2 - 50, height / 2, 40, "res/tails.png");
-		tails.boundries.add(mapEdge);
-		music = new Music("res/sanicTheme.ogg");
-		music.loop();
+		boundries.add(mapEdge);
+		
+		players.add(new Player(width / 2, height / 2, 50, "res/sanic.png", boundries));
+		players.add(new Player(width / 2 - 50, height / 2, 40, "res/tails.png", boundries));
+//		music = new Music("res/sanicTheme.ogg"); //I was listening to music, this was loud, oww
+//		music.loop();
 	}
 
 	public static void pollInput() {
 		// Handles keyboard and mouse input
-
-		sanic.azimuth = Math.toDegrees(Math.atan2(height - Mouse.getY()
-				- sanic.position.y, Mouse.getX() - sanic.position.x));
-
-		tails.azimuth = Math.toDegrees(Math.atan2(height - Mouse.getY()
-				- tails.position.y, Mouse.getX() - tails.position.x));
-		
-		
-		if (Keyboard.isKeyDown(Keyboard.KEY_W)
-				|| Keyboard.isKeyDown(Keyboard.KEY_A)
-				|| Keyboard.isKeyDown(Keyboard.KEY_S)
-				|| Keyboard.isKeyDown(Keyboard.KEY_D)) {
-			sanic.wobble++;
-		}
-		if (Keyboard.isKeyDown(Keyboard.KEY_W)) {
-			sanic.moveForward();
-		} else if (Keyboard.isKeyDown(Keyboard.KEY_S)) {
-			sanic.moveBackward();
-		}
-		if (Keyboard.isKeyDown(Keyboard.KEY_A)) {
-			sanic.moveLeft();
-		} else if (Keyboard.isKeyDown(Keyboard.KEY_D)) {
-			sanic.moveRight();
-		}
-
-		if (Keyboard.isKeyDown(Keyboard.KEY_UP)
-				|| Keyboard.isKeyDown(Keyboard.KEY_LEFT)
-				|| Keyboard.isKeyDown(Keyboard.KEY_DOWN)
-				|| Keyboard.isKeyDown(Keyboard.KEY_RIGHT)) {
-			tails.wobble++;
-		}
-		if (Keyboard.isKeyDown(Keyboard.KEY_UP)) {
-			tails.moveForward();
-		} else if (Keyboard.isKeyDown(Keyboard.KEY_DOWN)) {
-			tails.moveBackward();
-		}
-		if (Keyboard.isKeyDown(Keyboard.KEY_LEFT)) {
-			tails.moveLeft();
-		} else if (Keyboard.isKeyDown(Keyboard.KEY_RIGHT)) {
-			tails.moveRight();
-		}
-		
-		while (Keyboard.next()) {
-			if (Keyboard.getEventKeyState()) {
-				if (Keyboard.getEventKey() == Keyboard.KEY_ESCAPE) {
-					Display.destroy();
-					System.exit(0);
+		for (Player p: players) {
+			p.azimuth = Math.toDegrees(Math.atan2(height - Mouse.getY()
+					- p.position.y, Mouse.getX() - p.position.x));
+			if (p.equals(players.get(0))) {
+				if (Keyboard.isKeyDown(Keyboard.KEY_W)
+						|| Keyboard.isKeyDown(Keyboard.KEY_A)
+						|| Keyboard.isKeyDown(Keyboard.KEY_S)
+						|| Keyboard.isKeyDown(Keyboard.KEY_D)) {
+					p.wobble++;
 				}
-			} else {
-				switch (Keyboard.getEventKey()) {
-				case Keyboard.KEY_SPACE:
-					sanic.roll();
-					tails.roll();
-					break;
-				case Keyboard.KEY_1:
-					sanic.fire();
-					break;
+				if (Keyboard.isKeyDown(Keyboard.KEY_W)) {
+					p.moveForward();
+				} else if (Keyboard.isKeyDown(Keyboard.KEY_S)) {
+					p.moveBackward();
+				}
+				if (Keyboard.isKeyDown(Keyboard.KEY_A)) {
+					p.moveLeft();
+				} else if (Keyboard.isKeyDown(Keyboard.KEY_D)) {
+					p.moveRight();
 				}
 			}
-		}
+			else if (p.equals(players.get(1))) {
+				if (Keyboard.isKeyDown(Keyboard.KEY_UP)
+						|| Keyboard.isKeyDown(Keyboard.KEY_LEFT)
+						|| Keyboard.isKeyDown(Keyboard.KEY_RIGHT)
+						|| Keyboard.isKeyDown(Keyboard.KEY_DOWN)) {
+					p.wobble++;
+				}
+				if (Keyboard.isKeyDown(Keyboard.KEY_UP)) {
+					p.moveForward();
+				} else if (Keyboard.isKeyDown(Keyboard.KEY_DOWN)) {
+					p.moveBackward();
+				}
+				if (Keyboard.isKeyDown(Keyboard.KEY_LEFT)) {
+					p.moveLeft();
+				} else if (Keyboard.isKeyDown(Keyboard.KEY_RIGHT)) {
+					p.moveRight();
+				}
+			}
+			while (Keyboard.next()) {
+				if (Keyboard.getEventKeyState()) {
+					if (Keyboard.getEventKey() == Keyboard.KEY_ESCAPE) {
+						Display.destroy();
+						System.exit(0);
+					}
+				} else {
+					switch (Keyboard.getEventKey()) {
+					case Keyboard.KEY_SPACE:
+						p.roll();
+						break;
+					case Keyboard.KEY_1:
+						p.fire();
+						break;
+					}
+				}
+			}
+		}		
 	}
 }
