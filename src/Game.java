@@ -29,7 +29,6 @@ public class Game {
 		while (!Display.isCloseRequested()) {
 			glClear(GL_COLOR_BUFFER_BIT);
 			
-			//font.drawString(100, 50, "Loading", Color.yellow);
 			player.draw();
 
 			pollInput();
@@ -59,7 +58,7 @@ public class Game {
 		glClearColor(0f, 1f, 0f, 0f);
 
 		//Loading Screen stuff
-		Font awtFont = new Font("Times New Roman", Font.BOLD, 24);
+		Font awtFont = new Font("Comic Sans", Font.BOLD, 24);
 		font = new TrueTypeFont(awtFont, false);
 		glClear(GL_COLOR_BUFFER_BIT);
         GL11.glEnable(GL11.GL_BLEND);
@@ -78,7 +77,13 @@ public class Game {
 
 		player.azimuth = Math.toDegrees(Math.atan2(height - Mouse.getY()
 				- player.position.y, Mouse.getX() - player.position.x));
-
+		
+		if (Keyboard.isKeyDown(Keyboard.KEY_W) 
+				|| Keyboard.isKeyDown(Keyboard.KEY_A)
+				|| Keyboard.isKeyDown(Keyboard.KEY_S)
+				|| Keyboard.isKeyDown(Keyboard.KEY_D)){
+			player.wobble++;
+		}
 		if (Keyboard.isKeyDown(Keyboard.KEY_W)) {
 			player.moveForward();
 		} else if (Keyboard.isKeyDown(Keyboard.KEY_S)) {
@@ -89,6 +94,10 @@ public class Game {
 		} else if (Keyboard.isKeyDown(Keyboard.KEY_D)) {
 			player.moveRight();
 		}
+		
+		if (Keyboard.isKeyDown(Keyboard.KEY_SPACE)) {
+			player.roll(); 
+		}
 
 		while (Keyboard.next()) {
 			if (Keyboard.getEventKeyState()) {
@@ -97,13 +106,11 @@ public class Game {
 					System.exit(0);
 				}
 			} else {
-				/*
-				 * switch (Keyboard.getEventKey()) { case Keyboard.KEY_W:
-				 * player.moveUp(); break; case Keyboard.KEY_A:
-				 * player.moveLeft(); break; case Keyboard.KEY_S:
-				 * player.moveDown(); break; case Keyboard.KEY_D:
-				 * player.moveRight(); break; }
-				 */
+				/*switch (Keyboard.getEventKey()) { 
+				case Keyboard.KEY_SPACE:
+					player.roll(); 
+					break; 
+				}*/
 			}
 		}
 	}
