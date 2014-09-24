@@ -4,16 +4,19 @@ import utils.Vector2D;
 
 public class Player {
 	public Vector2D position = new Vector2D();
-	public Square image = new Square(30);
+	public double size = 50;
+	public Square image = new Square(size);
 	public double azimuth = 0;
 	public double speed = 5;
+	private int wobble = 0;
 
 	public Player() {
 		
 	}
 
 	public void draw() {
-		image.azimuth = azimuth;
+		image.theta = azimuth;
+		image.theta += Math.toDegrees(Math.sin(wobble))*.1;
 		if (azimuth > 90 || azimuth < -90) {
 			image.isFlipped = true;
 		} else {
@@ -24,11 +27,13 @@ public class Player {
 	}
 
 	public void moveForward() {
+		wobble+=1;
 		position.add(new Vector2D(speed * Math.cos(Math.toRadians(azimuth)),
 				speed * Math.sin(Math.toRadians(azimuth))));
 	}
 
 	public void moveBackward() {
+		wobble-=1;
 		position.add(new Vector2D(speed * -Math.cos(Math.toRadians(azimuth)),
 				speed * -Math.sin(Math.toRadians(azimuth))));
 	}

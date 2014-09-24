@@ -1,41 +1,29 @@
+
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.DisplayMode;
+import org.lwjgl.opengl.GL11;
 
 import static org.lwjgl.opengl.GL11.*;
 
 import org.lwjgl.opengl.Display;
-
-import utils.Vector2D;
+import org.newdawn.slick.Music;
+import org.newdawn.slick.SlickException;
 
 public class Game {
 	public static Player player;
 
 	private static int width = 640;
 	private static int height = 480;
+	
+	private static Music music;
 
-	public static void main(String[] args) {
-		try {
-			Display.setDisplayMode(new DisplayMode(640, 480));
-			Display.setTitle("RPG");
-			Display.create();
-		} catch (LWJGLException e) {
-			e.printStackTrace();
-			Display.destroy();
-			System.exit(1);
-		}
-
-		player = new Player();
-
-		glMatrixMode(GL_PROJECTION);
-		glLoadIdentity(); // Resets any previous projection matrices
-		glOrtho(0, 640, 480, 0, 1, -1);
-		glMatrixMode(GL_MODELVIEW);
-
+	public static void main(String[] args) throws SlickException {
+		init();
 		while (!Display.isCloseRequested()) {
 			glClear(GL_COLOR_BUFFER_BIT);
-
+			
 			player.draw();
 
 			pollInput();
@@ -45,6 +33,29 @@ public class Game {
 		}
 		Display.destroy();
 		System.exit(0);
+	}
+	
+	public static void init() throws SlickException{		
+		try {
+			Display.setDisplayMode(new DisplayMode(width, height));
+			Display.setTitle("Sanic 3");
+			Display.create();
+		} catch (LWJGLException e) {
+			e.printStackTrace();
+			Display.destroy();
+			System.exit(1);
+		}
+				
+		player = new Player();
+
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity(); // Resets any previous projection matrices
+		glOrtho(0, width, height, 0, 1, -1);
+		glMatrixMode(GL_MODELVIEW);
+		GL11.glClearColor(0f, 1f, 0f, 0f);
+
+		music = new Music("res/sanicTheme.ogg");
+		music.loop();
 	}
 
 	public static void pollInput() {

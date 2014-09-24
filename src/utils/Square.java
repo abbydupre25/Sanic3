@@ -7,6 +7,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
+import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureLoader;
 
@@ -14,7 +15,7 @@ public class Square {
 	public double size = 1;
 	public Vector2D position = new Vector2D();
 	private Vector2D[] verticies = new Vector2D[4];
-	public double azimuth = 0;
+	public double theta = 0;
 	public Texture texture;
 	public boolean isFlipped = false;
 	
@@ -34,14 +35,18 @@ public class Square {
 		}
 	}
 	
-	public void draw() {
-		glPushMatrix();
-		glTranslated(position.x, position.y, 0);
-		azimuth -= 90;
-		glRotated(azimuth, 0, 0, 1);
-		glTranslated(-position.x, -position.y, 0);
-		
+	public void draw() {		
+		//draw transparent texture    
 		glEnable(GL_TEXTURE_2D);
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glPushMatrix();    
+		
+		glTranslated(position.x, position.y, 0);
+		theta -= 90;
+		glRotated(theta, 0, 0, 1);
+		glTranslated(-position.x, -position.y, 0);
+			
 		texture.bind();
 		glBegin(GL_QUADS);
 		if (isFlipped) {
@@ -65,10 +70,6 @@ public class Square {
 		}
 		texture.release();
 		glDisable(GL_TEXTURE_2D);
-		
-		/*for (int i = 0; i < verticies.length; i++){
-			glVertex2d(verticies[i].x + position.x, verticies[i].y + position.y);
-		}*/
 		glEnd();
 		glPopMatrix();
 	}
