@@ -1,4 +1,6 @@
 
+import java.awt.Font;
+
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -8,8 +10,10 @@ import org.lwjgl.opengl.GL11;
 import static org.lwjgl.opengl.GL11.*;
 
 import org.lwjgl.opengl.Display;
+import org.newdawn.slick.Color;
 import org.newdawn.slick.Music;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.TrueTypeFont;
 
 public class Game {
 	public static Player player;
@@ -18,12 +22,14 @@ public class Game {
 	private static int height = 480;
 	
 	private static Music music;
+	public static TrueTypeFont font;
 
 	public static void main(String[] args) throws SlickException {
 		init();
 		while (!Display.isCloseRequested()) {
 			glClear(GL_COLOR_BUFFER_BIT);
 			
+			//font.drawString(100, 50, "Loading", Color.yellow);
 			player.draw();
 
 			pollInput();
@@ -46,14 +52,23 @@ public class Game {
 			System.exit(1);
 		}
 				
-		player = new Player();
-
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity(); // Resets any previous projection matrices
 		glOrtho(0, width, height, 0, 1, -1);
 		glMatrixMode(GL_MODELVIEW);
-		GL11.glClearColor(0f, 1f, 0f, 0f);
+		glClearColor(0f, 1f, 0f, 0f);
 
+		//Loading Screen stuff
+		Font awtFont = new Font("Times New Roman", Font.BOLD, 24);
+		font = new TrueTypeFont(awtFont, false);
+		glClear(GL_COLOR_BUFFER_BIT);
+        GL11.glEnable(GL11.GL_BLEND);
+        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+		font.drawString(width/2 - 50, height/2 - 20, "Loading...", Color.yellow);
+		Display.update();
+		
+		player = new Player();
+		player.position.set(width/2, height/2);
 		music = new Music("res/sanicTheme.ogg");
 		music.loop();
 	}
