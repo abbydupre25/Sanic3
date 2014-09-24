@@ -1,11 +1,12 @@
+package com.DavidDupre.github;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import utils.Boundry;
-import utils.Square;
-import utils.Vector2D;
+import com.DavidDupre.github.utils.Boundry;
+import com.DavidDupre.github.utils.Square;
+import com.DavidDupre.github.utils.Vector2D;
 
 public class Player {
 	public Vector2D position = new Vector2D();

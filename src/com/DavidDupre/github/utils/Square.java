@@ -1,4 +1,4 @@
-package utils;
+package com.DavidDupre.github.utils;
 
 import static org.lwjgl.opengl.GL11.*;
 

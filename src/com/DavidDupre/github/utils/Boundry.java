@@ -1,4 +1,4 @@
-package utils;
+package com.DavidDupre.github.utils;
 
 public class Boundry {
 	public double minX, maxX, minY, maxY;

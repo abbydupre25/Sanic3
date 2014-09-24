@@ -1,5 +1,6 @@
-import utils.Square;
-import utils.Vector2D;
+package com.DavidDupre.github;
+import com.DavidDupre.github.utils.Square;
+import com.DavidDupre.github.utils.Vector2D;
 
 public class Projectile {
 	public Vector2D position = new Vector2D();

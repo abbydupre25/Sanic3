@@ -1,4 +1,4 @@
-package utils;
+package com.DavidDupre.github.utils;
 
 public class Vector2D {
 	public double x, y;

@@ -1,3 +1,4 @@
+package com.DavidDupre.github;
 
 public class Actions {
 	static final int IDLE = 0;

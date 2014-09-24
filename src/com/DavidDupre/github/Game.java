@@ -1,3 +1,4 @@
+package com.DavidDupre.github;
 import java.awt.Font;
 
 import org.lwjgl.LWJGLException;
@@ -14,7 +15,7 @@ import org.newdawn.slick.Music;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.TrueTypeFont;
 
-import utils.Boundry;
+import com.DavidDupre.github.utils.Boundry;
 
 public class Game {
 	public static Player sanic;
