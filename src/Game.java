@@ -1,4 +1,3 @@
-
 import java.awt.Font;
 
 import org.lwjgl.LWJGLException;
@@ -18,12 +17,12 @@ import org.newdawn.slick.TrueTypeFont;
 import utils.Boundry;
 
 public class Game {
-	public static Player player;
+	public static Player sanic;
 	public static Player tails;
 
 	private static int width = 640;
 	private static int height = 480;
-	
+
 	private static Music music;
 	public static TrueTypeFont font;
 
@@ -31,11 +30,11 @@ public class Game {
 		init();
 		while (!Display.isCloseRequested()) {
 			glClear(GL_COLOR_BUFFER_BIT);
-			
-			player.update();
+
+			sanic.update();
 			tails.update();
-			
-			player.draw();
+
+			sanic.draw();
 			tails.draw();
 
 			pollInput();
@@ -46,8 +45,8 @@ public class Game {
 		Display.destroy();
 		System.exit(0);
 	}
-	
-	public static void init() throws SlickException{		
+
+	public static void init() throws SlickException {
 		try {
 			Display.setDisplayMode(new DisplayMode(width, height));
 			Display.setTitle("Sanic 3");
@@ -57,28 +56,27 @@ public class Game {
 			Display.destroy();
 			System.exit(1);
 		}
-				
+
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity(); // Resets any previous projection matrices
 		glOrtho(0, width, height, 0, 1, -1);
 		glMatrixMode(GL_MODELVIEW);
 		glClearColor(0f, 1f, 0f, 0f);
 
-		//Loading Screen stuff
+		// Loading Screen stuff
 		Font awtFont = new Font("Comic Sans", Font.BOLD, 24);
 		font = new TrueTypeFont(awtFont, false);
 		glClear(GL_COLOR_BUFFER_BIT);
-        GL11.glEnable(GL11.GL_BLEND);
-        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-		font.drawString(width/2 - 50, height/2 - 20, "Loading...", Color.yellow);
+		GL11.glEnable(GL11.GL_BLEND);
+		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+		font.drawString(width / 2 - 50, height / 2 - 20, "Loading...",
+				Color.yellow);
 		Display.update();
-		
+
 		Boundry mapEdge = new Boundry(0, width, 0, height);
-		player = new Player("res/sanic.png");
-		player.position.set(width/2, height/2);
-		player.boundries.add(mapEdge);
-		tails = new Player("res/tails.png");
-		tails.position.set(width/2, height/2);
+		sanic = new Player(width / 2, height / 2, 50, "res/sanic.png");
+		sanic.boundries.add(mapEdge);
+		tails = new Player(width / 2 - 50, height / 2, 40, "res/tails.png");
 		tails.boundries.add(mapEdge);
 		music = new Music("res/sanicTheme.ogg");
 		music.loop();
@@ -87,33 +85,34 @@ public class Game {
 	public static void pollInput() {
 		// Handles keyboard and mouse input
 
-		player.azimuth = Math.toDegrees(Math.atan2(height - Mouse.getY()
-				- player.position.y, Mouse.getX() - player.position.x));
-		
+		sanic.azimuth = Math.toDegrees(Math.atan2(height - Mouse.getY()
+				- sanic.position.y, Mouse.getX() - sanic.position.x));
+
 		tails.azimuth = Math.toDegrees(Math.atan2(height - Mouse.getY()
 				- tails.position.y, Mouse.getX() - tails.position.x));
 		
-		if (Keyboard.isKeyDown(Keyboard.KEY_W) 
+		
+		if (Keyboard.isKeyDown(Keyboard.KEY_W)
 				|| Keyboard.isKeyDown(Keyboard.KEY_A)
 				|| Keyboard.isKeyDown(Keyboard.KEY_S)
-				|| Keyboard.isKeyDown(Keyboard.KEY_D)){
-			player.wobble++;
+				|| Keyboard.isKeyDown(Keyboard.KEY_D)) {
+			sanic.wobble++;
 		}
 		if (Keyboard.isKeyDown(Keyboard.KEY_W)) {
-			player.moveForward();
+			sanic.moveForward();
 		} else if (Keyboard.isKeyDown(Keyboard.KEY_S)) {
-			player.moveBackward();
+			sanic.moveBackward();
 		}
 		if (Keyboard.isKeyDown(Keyboard.KEY_A)) {
-			player.moveLeft();
+			sanic.moveLeft();
 		} else if (Keyboard.isKeyDown(Keyboard.KEY_D)) {
-			player.moveRight();
+			sanic.moveRight();
 		}
-		
-		if (Keyboard.isKeyDown(Keyboard.KEY_UP) 
+
+		if (Keyboard.isKeyDown(Keyboard.KEY_UP)
 				|| Keyboard.isKeyDown(Keyboard.KEY_LEFT)
 				|| Keyboard.isKeyDown(Keyboard.KEY_DOWN)
-				|| Keyboard.isKeyDown(Keyboard.KEY_RIGHT)){
+				|| Keyboard.isKeyDown(Keyboard.KEY_RIGHT)) {
 			tails.wobble++;
 		}
 		if (Keyboard.isKeyDown(Keyboard.KEY_UP)) {
@@ -126,7 +125,7 @@ public class Game {
 		} else if (Keyboard.isKeyDown(Keyboard.KEY_RIGHT)) {
 			tails.moveRight();
 		}
-
+		
 		while (Keyboard.next()) {
 			if (Keyboard.getEventKeyState()) {
 				if (Keyboard.getEventKey() == Keyboard.KEY_ESCAPE) {
@@ -134,11 +133,14 @@ public class Game {
 					System.exit(0);
 				}
 			} else {
-				switch (Keyboard.getEventKey()) { 
+				switch (Keyboard.getEventKey()) {
 				case Keyboard.KEY_SPACE:
-					player.roll(); 
+					sanic.roll();
 					tails.roll();
-					break; 
+					break;
+				case Keyboard.KEY_1:
+					sanic.fire();
+					break;
 				}
 			}
 		}
