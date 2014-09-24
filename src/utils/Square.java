@@ -7,7 +7,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureLoader;
 
@@ -27,7 +26,7 @@ public class Square {
 		verticies[3] = new Vector2D(-size, size);
 		
 		try{
-			this.texture = TextureLoader.getTexture("PNG", new FileInputStream(new File("C:\\sanic.png")));
+			this.texture = TextureLoader.getTexture("PNG", new FileInputStream(new File("res/sanic.png")));
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -42,6 +41,7 @@ public class Square {
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		glPushMatrix();    
 		
+		glColor3f(1f, 1f, 1f);
 		glTranslated(position.x, position.y, 0);
 		theta -= 90;
 		glRotated(theta, 0, 0, 1);
