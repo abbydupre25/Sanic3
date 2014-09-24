@@ -15,8 +15,11 @@ import org.newdawn.slick.Music;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.TrueTypeFont;
 
+import utils.Boundry;
+
 public class Game {
 	public static Player player;
+	public static Player tails;
 
 	private static int width = 640;
 	private static int height = 480;
@@ -29,7 +32,11 @@ public class Game {
 		while (!Display.isCloseRequested()) {
 			glClear(GL_COLOR_BUFFER_BIT);
 			
+			player.update();
+			tails.update();
+			
 			player.draw();
+			tails.draw();
 
 			pollInput();
 
@@ -66,8 +73,13 @@ public class Game {
 		font.drawString(width/2 - 50, height/2 - 20, "Loading...", Color.yellow);
 		Display.update();
 		
-		player = new Player();
+		Boundry mapEdge = new Boundry(0, width, 0, height);
+		player = new Player("res/sanic.png");
 		player.position.set(width/2, height/2);
+		player.boundries.add(mapEdge);
+		tails = new Player("res/tails.png");
+		tails.position.set(width/2, height/2);
+		tails.boundries.add(mapEdge);
 		music = new Music("res/sanicTheme.ogg");
 		music.loop();
 	}
@@ -77,6 +89,9 @@ public class Game {
 
 		player.azimuth = Math.toDegrees(Math.atan2(height - Mouse.getY()
 				- player.position.y, Mouse.getX() - player.position.x));
+		
+		tails.azimuth = Math.toDegrees(Math.atan2(height - Mouse.getY()
+				- tails.position.y, Mouse.getX() - tails.position.x));
 		
 		if (Keyboard.isKeyDown(Keyboard.KEY_W) 
 				|| Keyboard.isKeyDown(Keyboard.KEY_A)
@@ -95,8 +110,21 @@ public class Game {
 			player.moveRight();
 		}
 		
-		if (Keyboard.isKeyDown(Keyboard.KEY_SPACE)) {
-			player.roll(); 
+		if (Keyboard.isKeyDown(Keyboard.KEY_UP) 
+				|| Keyboard.isKeyDown(Keyboard.KEY_LEFT)
+				|| Keyboard.isKeyDown(Keyboard.KEY_DOWN)
+				|| Keyboard.isKeyDown(Keyboard.KEY_RIGHT)){
+			tails.wobble++;
+		}
+		if (Keyboard.isKeyDown(Keyboard.KEY_UP)) {
+			tails.moveForward();
+		} else if (Keyboard.isKeyDown(Keyboard.KEY_DOWN)) {
+			tails.moveBackward();
+		}
+		if (Keyboard.isKeyDown(Keyboard.KEY_LEFT)) {
+			tails.moveLeft();
+		} else if (Keyboard.isKeyDown(Keyboard.KEY_RIGHT)) {
+			tails.moveRight();
 		}
 
 		while (Keyboard.next()) {
@@ -106,11 +134,12 @@ public class Game {
 					System.exit(0);
 				}
 			} else {
-				/*switch (Keyboard.getEventKey()) { 
+				switch (Keyboard.getEventKey()) { 
 				case Keyboard.KEY_SPACE:
 					player.roll(); 
+					tails.roll();
 					break; 
-				}*/
+				}
 			}
 		}
 	}

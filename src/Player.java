@@ -1,14 +1,19 @@
 
+import java.util.ArrayList;
+import java.util.List;
+
+import utils.Boundry;
 import utils.Square;
 import utils.Vector2D;
 
 public class Player {
 	public Vector2D position = new Vector2D();
 	public double size = 50;
-	public Square image = new Square(size);
+	public Square image;
 	public double azimuth = 0;
 	public double speed = 5;
 	public int wobble = 0;
+	public List<Boundry> boundries = new ArrayList<Boundry>();
 	
 	//Terrible variables that should probably go away
 	public int action = Actions.IDLE;
@@ -16,34 +21,51 @@ public class Player {
 	private int rollCount = 0;
 	private double rollAzimuth;
 
-	public Player() {
-		
+	public Player(String imageUrl) {
+		this.image = new Square(size, imageUrl);
 	}
-
-	public void draw() {
-		image.theta = azimuth;
-		image.theta += Math.toDegrees(Math.sin(wobble))*.1;
+	
+	public void update() {
+		//Collision detection...sort of
+		for (Boundry b : boundries) {
+			if (position.x > b.maxX-size){
+				position.x = b.maxX-size;
+			} else if (position.x < b.minX+size){
+				position.x = b.minX+size;
+			}
+			if (position.y > b.maxY-size) {
+				position.y = b.maxY-size;
+			} else if (position.y < b.minY+size) {
+				position.y = b.minY+size; 
+			}
+		}
+		
+		this.image.theta = azimuth;
+		this.image.theta += Math.toDegrees(Math.sin(wobble))*.1;
 		switch (action) {
 		case Actions.ROLL:
-			if (rollCount < 10){
+			if (rollCount < 20){
 				movementLocked = true;
 				position.add(new Vector2D(2 * speed * Math.cos(Math.toRadians(rollAzimuth)),
 						2 * speed * Math.sin(Math.toRadians(rollAzimuth))));
 				rollCount++;
-				image.theta += Math.toDegrees(Math.sin(rollCount))*2;
+				this.image.theta += Math.toDegrees(Math.sin(rollCount))*2;
 			} else {
 				rollCount = 0;
 				movementLocked = false;
 				action = Actions.IDLE;
 			}
 		}
+	}
+
+	public void draw() {
 		if (azimuth > 90 || azimuth < -90) {
-			image.isFlipped = true;
+			this.image.isFlipped = true;
 		} else {
-			image.isFlipped = false;
+			this.image.isFlipped = false;
 		}
-		image.position.set(this.position);
-		image.draw();
+		this.image.position.set(this.position);
+		this.image.draw();
 	}
 	
 	public void roll() {

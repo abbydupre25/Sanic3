@@ -12,13 +12,15 @@ import org.newdawn.slick.opengl.TextureLoader;
 
 public class Square {
 	public double size = 1;
-	public Vector2D position = new Vector2D();
-	private Vector2D[] verticies = new Vector2D[4];
+	public Vector2D position;
+	public Vector2D[] verticies;
 	public double theta = 0;
 	public Texture texture;
 	public boolean isFlipped = false;
 	
-	public Square(double size){
+	public Square(double size, String imageUrl){
+		this.position = new Vector2D();
+		this.verticies = new Vector2D[4];
 		this.size = size;
 		verticies[0] = new Vector2D(-size, -size);
 		verticies[1] = new Vector2D(size, -size);
@@ -26,7 +28,7 @@ public class Square {
 		verticies[3] = new Vector2D(-size, size);
 		
 		try{
-			this.texture = TextureLoader.getTexture("PNG", new FileInputStream(new File("res/sanic.png")));
+			this.texture = TextureLoader.getTexture("PNG", new FileInputStream(new File(imageUrl)));
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
