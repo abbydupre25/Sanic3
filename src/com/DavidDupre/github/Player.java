@@ -8,11 +8,11 @@ import com.DavidDupre.github.utils.Square;
 import com.DavidDupre.github.utils.Vector2D;
 
 public class Player {
-	public Vector2D position = new Vector2D();
 	public int wobble = 0;
 	public double azimuth = 0;
 	
-	private double size = 50;
+	public Vector2D position = new Vector2D();
+	
 	private Square image;
 	
 	private double speed = 5;
@@ -27,9 +27,7 @@ public class Player {
 
 	public Player(int x, int y, int size, String imageUrl, List<Boundry> boundries) {
 		this.boundries = boundries;
-		this.size = size;
-		position.x = x;
-		position.y = y;
+		position.set(x, y);
 		this.image = new Square(size, imageUrl, boundries);
 	}
 	
@@ -61,6 +59,7 @@ public class Player {
 			
 			else {
 				projectiles.get(i).update();
+				projectiles.get(i).draw();
 			}
 		}
 	}

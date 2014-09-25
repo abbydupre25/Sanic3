@@ -30,7 +30,6 @@ public class Projectile {
 			position.add(new Vector2D(speed * Math.cos(Math.toRadians(azimuth)), speed
 					* Math.sin(Math.toRadians(azimuth))));
 			projectileDistance++;
-			draw();
 		}
 		
 		else {
