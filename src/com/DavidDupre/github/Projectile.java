@@ -44,11 +44,16 @@ public class Projectile {
 			distancePassed = true;
 		}
 	
+		int nullEnemy = -1;
 		for (Enemy e: enemies) {
 			if(image.collided(e.image)) {
 				collided = true;
 				e.killNotify();
+				nullEnemy = enemies.indexOf(e);
 			}
+		}
+		if (nullEnemy != -1) {
+			enemies.remove(nullEnemy);
 		}
 	}
 	
