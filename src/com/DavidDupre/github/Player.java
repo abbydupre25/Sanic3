@@ -24,8 +24,8 @@ public class Player {
 	private int rollCount = 0;
 	private double rollAzimuth;
 	private List<Projectile> projectiles = new ArrayList<Projectile>();
-	private List<Enemy> enemies;
-
+	private List<Enemy> enemies = new ArrayList<Enemy>();
+	
 	public Player(int x, int y, int size, String imageUrl, List<Boundry> boundries, List<Enemy> enemies) {
 		this.boundries = boundries;
 		this.enemies = enemies;
@@ -68,6 +68,7 @@ public class Player {
 
 	public void fire() {
 		projectiles.add(new Projectile(position.x, position.y, this, boundries, enemies));
+		Sounds.intervention.play();
 	}
 	
 	public void draw() {
@@ -109,3 +110,4 @@ public class Player {
 		}
 	}
 }
+

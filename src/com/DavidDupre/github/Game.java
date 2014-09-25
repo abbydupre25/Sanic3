@@ -25,11 +25,10 @@ public class Game {
 	private static List<Boundry> boundries = new ArrayList<Boundry>();
 	private static List<Player> players = new ArrayList<Player>();
 	private static List<Enemy> enemies = new ArrayList<Enemy>();
-	
+
 	private static int width = 640;
-	private static int height = 480;	
-	
-	private static Music music;
+	private static int height = 480;
+
 	public static TrueTypeFont font;
 
 	public static void main(String[] args) throws SlickException {
@@ -56,7 +55,7 @@ public class Game {
 		Display.destroy();
 		System.exit(0);
 	}
-	
+
 	public static void init() throws SlickException {
 		try {
 			Display.setDisplayMode(new DisplayMode(width, height));
@@ -97,8 +96,9 @@ public class Game {
 				(int) (random.nextDouble() * height), 50, "res/shaedow.png",
 				boundries, players));
 
-		// music = new Music("res/sanicTheme.ogg"); // This was really loud, oww
-		// music.loop();
+		Sounds.load();
+		Sounds.music.loop();
+		Sounds.music.setVolume(.25f);
 	}
 
 	public static void pollInput() {
@@ -108,8 +108,6 @@ public class Game {
 		boolean fireBooped = false;
 		
 		for (Player p : players) {
-			p.azimuth = Math.toDegrees(Math.atan2(height - Mouse.getY()
-					- p.position.y, Mouse.getX() - p.position.x));
 			if (p.equals(players.get(0))) {
 				if (Keyboard.isKeyDown(Keyboard.KEY_W)
 						|| Keyboard.isKeyDown(Keyboard.KEY_A)
@@ -155,16 +153,25 @@ public class Game {
 				} else {
 					if (Keyboard.getEventKey() == Keyboard.KEY_SPACE || rollBooped) {
 						rollBooped = true;
+						p.azimuth = Math.toDegrees(Math.atan2(height - Mouse.getY()
+								- p.position.y, Mouse.getX() - p.position.x));
 						p.roll();
-						break;
-					}
-					else if (Keyboard.getEventKey() == Keyboard.KEY_1 || fireBooped) {
-						fireBooped = true;
-						p.fire();
+						p.azimuth = 0;
 						break;
 					}
 				}
 				break;
+			}
+			while (Mouse.next()) {
+				if (!Mouse.getEventButtonState()){
+					if (Mouse.getEventButton() == 0 || fireBooped){ //detect mouse release
+						fireBooped = true;
+						p.azimuth = Math.toDegrees(Math.atan2(height - Mouse.getY()
+								- p.position.y, Mouse.getX() - p.position.x));
+						p.fire();
+						p.azimuth = 0;
+					}
+				}
 			}
 		}
 	}
