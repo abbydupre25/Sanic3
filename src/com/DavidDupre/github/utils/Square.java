@@ -50,8 +50,7 @@ public class Square {
 
 		glColor3f(1f, 1f, 1f);
 		glTranslated(position.x, position.y, 0);
-		theta -= 90;
-		glRotated(theta, 0, 0, 1);
+		glRotated(theta-90, 0, 0, 1);
 		glTranslated(-position.x, -position.y, 0);
 
 		texture.bind();
