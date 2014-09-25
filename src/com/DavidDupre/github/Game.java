@@ -29,7 +29,6 @@ public class Game {
 	private static int width = 640;
 	private static int height = 480;
 
-	private static Music music;
 	public static TrueTypeFont font;
 
 	public static void main(String[] args) throws SlickException {
@@ -95,8 +94,9 @@ public class Game {
 				(int) (random.nextDouble() * height), 50, "res/shaedow.png",
 				boundries, players));
 
-		// music = new Music("res/sanicTheme.ogg"); // This was really loud, oww
-		// music.loop();
+		Sounds.load();
+		Sounds.music.loop();
+		Sounds.music.setVolume(.25f);
 	}
 
 	public static void pollInput() {
@@ -159,6 +159,7 @@ public class Game {
 					else if (Keyboard.getEventKey() == Keyboard.KEY_1 || fireBooped) {
 						fireBooped = true;
 						p.fire();
+						Sounds.intervention.play();
 						break;
 					}
 //					switch (Keyboard.getEventKey()) {
