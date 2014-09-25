@@ -1,7 +1,9 @@
 package com.DavidDupre.github;
+
 import java.awt.Font;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Random;
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
@@ -22,22 +24,28 @@ import com.DavidDupre.github.utils.Boundry;
 public class Game {
 	private static List<Boundry> boundries = new ArrayList<Boundry>();
 	private static List<Player> players = new ArrayList<Player>();
-	
+	private static List<Enemy> enemies = new ArrayList<Enemy>();
+
 	private static int width = 640;
 	private static int height = 480;
 
 	private static Music music;
 	public static TrueTypeFont font;
-	
+
 	public static void main(String[] args) throws SlickException {
 		init();
 		while (!Display.isCloseRequested()) {
 			glClear(GL_COLOR_BUFFER_BIT);
 			pollInput();
 
-			for (Player p: players) {
+			for (Player p : players) {
 				p.update();
 				p.draw();
+			}
+
+			for (Enemy e : enemies) {
+				e.update();
+				e.draw();
 			}
 			
 			Display.update();
@@ -76,16 +84,28 @@ public class Game {
 
 		Boundry mapEdge = new Boundry(0, width, 0, height);
 		boundries.add(mapEdge);
-		
-		players.add(new Player(width / 2, height / 2, 50, "res/sanic.png", boundries));
-		players.add(new Player(width / 2 - 50, height / 2, 40, "res/tails.png", boundries));
-//		music = new Music("res/sanicTheme.ogg"); //I was listening to music, this was loud, oww
-//		music.loop();
+
+		players.add(new Player(width / 2, height / 2, 50, "res/sanic.png",
+				boundries));
+		players.add(new Player(width / 2 - 50, height / 2, 40, "res/tails.png",
+				boundries));
+
+		Random random = new Random();
+		enemies.add(new Enemy((int) (random.nextDouble() * width),
+				(int) (random.nextDouble() * height), 50, "res/shaedow.png",
+				boundries, players));
+
+		// music = new Music("res/sanicTheme.ogg"); // This was really loud, oww
+		// music.loop();
 	}
 
 	public static void pollInput() {
 		// Handles keyboard and mouse input
-		for (Player p: players) {
+		boolean booped = false;
+		boolean rollBooped = false;
+		boolean fireBooped = false;
+		
+		for (Player p : players) {
 			p.azimuth = Math.toDegrees(Math.atan2(height - Mouse.getY()
 					- p.position.y, Mouse.getX() - p.position.x));
 			if (p.equals(players.get(0))) {
@@ -105,8 +125,7 @@ public class Game {
 				} else if (Keyboard.isKeyDown(Keyboard.KEY_D)) {
 					p.moveRight();
 				}
-			}
-			else if (p.equals(players.get(1))) {
+			} else if (p.equals(players.get(1))) {
 				if (Keyboard.isKeyDown(Keyboard.KEY_UP)
 						|| Keyboard.isKeyDown(Keyboard.KEY_LEFT)
 						|| Keyboard.isKeyDown(Keyboard.KEY_RIGHT)
@@ -124,23 +143,35 @@ public class Game {
 					p.moveRight();
 				}
 			}
-			while (Keyboard.next()) {
+			while (Keyboard.next() || booped) {
+				booped = true;
 				if (Keyboard.getEventKeyState()) {
 					if (Keyboard.getEventKey() == Keyboard.KEY_ESCAPE) {
 						Display.destroy();
 						System.exit(0);
 					}
 				} else {
-					switch (Keyboard.getEventKey()) {
-					case Keyboard.KEY_SPACE:
+					if (Keyboard.getEventKey() == Keyboard.KEY_SPACE || rollBooped) {
+						rollBooped = true;
 						p.roll();
 						break;
-					case Keyboard.KEY_1:
+					}
+					else if (Keyboard.getEventKey() == Keyboard.KEY_1 || fireBooped) {
+						fireBooped = true;
 						p.fire();
 						break;
 					}
+//					switch (Keyboard.getEventKey()) {
+//					case Keyboard.KEY_SPACE:
+//						p.roll();
+//						break;
+//					case Keyboard.KEY_1:
+//						p.fire();
+//						break;
+//					}
 				}
+				break;
 			}
-		}		
+		}
 	}
 }
