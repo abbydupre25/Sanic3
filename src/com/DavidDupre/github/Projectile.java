@@ -8,7 +8,7 @@ import com.DavidDupre.github.utils.Vector2D;
 public class Projectile {
 	public Vector2D position = new Vector2D();
 	private List<Boundry> boundries;
-	public double size = 50;
+	public double size = 30;
 	public Square image;
 	private double azimuth;
 	private double speed = 20;
