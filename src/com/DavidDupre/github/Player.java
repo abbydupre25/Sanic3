@@ -66,6 +66,7 @@ public class Player {
 
 	public void fire() {
 		projectiles.add(new Projectile(position.x, position.y, this, boundries));
+		Sounds.intervention.play();
 	}
 	
 	public void draw() {

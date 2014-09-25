@@ -106,8 +106,6 @@ public class Game {
 		boolean fireBooped = false;
 		
 		for (Player p : players) {
-			p.azimuth = Math.toDegrees(Math.atan2(height - Mouse.getY()
-					- p.position.y, Mouse.getX() - p.position.x));
 			if (p.equals(players.get(0))) {
 				if (Keyboard.isKeyDown(Keyboard.KEY_W)
 						|| Keyboard.isKeyDown(Keyboard.KEY_A)
@@ -153,25 +151,25 @@ public class Game {
 				} else {
 					if (Keyboard.getEventKey() == Keyboard.KEY_SPACE || rollBooped) {
 						rollBooped = true;
+						p.azimuth = Math.toDegrees(Math.atan2(height - Mouse.getY()
+								- p.position.y, Mouse.getX() - p.position.x));
 						p.roll();
+						p.azimuth = 0;
 						break;
 					}
-					else if (Keyboard.getEventKey() == Keyboard.KEY_1 || fireBooped) {
-						fireBooped = true;
-						p.fire();
-						Sounds.intervention.play();
-						break;
-					}
-//					switch (Keyboard.getEventKey()) {
-//					case Keyboard.KEY_SPACE:
-//						p.roll();
-//						break;
-//					case Keyboard.KEY_1:
-//						p.fire();
-//						break;
-//					}
 				}
 				break;
+			}
+			while (Mouse.next()) {
+				if (!Mouse.getEventButtonState()){
+					if (Mouse.getEventButton() == 0 || fireBooped){ //detect mouse release
+						fireBooped = true;
+						p.azimuth = Math.toDegrees(Math.atan2(height - Mouse.getY()
+								- p.position.y, Mouse.getX() - p.position.x));
+						p.fire();
+						p.azimuth = 0;
+					}
+				}
 			}
 		}
 	}
