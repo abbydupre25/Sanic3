@@ -19,8 +19,8 @@ public class Square {
 	public Texture texture;
 	public boolean isFlipped = false;
 	public List<Boundry> boundries;
-	
-	public Square(double size, String imageUrl, List<Boundry> boundries){
+
+	public Square(double size, String imageUrl, List<Boundry> boundries) {
 		this.position = new Vector2D();
 		this.verticies = new Vector2D[4];
 		this.size = size;
@@ -28,36 +28,37 @@ public class Square {
 		verticies[1] = new Vector2D(size, -size);
 		verticies[2] = new Vector2D(size, size);
 		verticies[3] = new Vector2D(-size, size);
-		
-		this.boundries = boundries; 
-		
-		try{
-			this.texture = TextureLoader.getTexture("PNG", new FileInputStream(new File(imageUrl)));
+
+		this.boundries = boundries;
+
+		try {
+			this.texture = TextureLoader.getTexture("PNG", new FileInputStream(
+					new File(imageUrl)));
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-	
-	public void draw() {		
-		//draw transparent texture    
+
+	public void draw() {
+		// draw transparent texture
 		glEnable(GL_TEXTURE_2D);
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		glPushMatrix();    
-		
+		glPushMatrix();
+
 		glColor3f(1f, 1f, 1f);
 		glTranslated(position.x, position.y, 0);
 		theta -= 90;
 		glRotated(theta, 0, 0, 1);
 		glTranslated(-position.x, -position.y, 0);
-			
+
 		texture.bind();
 		glBegin(GL_QUADS);
 		if (isFlipped) {
 			glTexCoord2f(1, 1);
-			glVertex2d(verticies[2].x + position.x, verticies[2].y + position.y);	
+			glVertex2d(verticies[2].x + position.x, verticies[2].y + position.y);
 			glTexCoord2f(1, 0);
 			glVertex2d(verticies[3].x + position.x, verticies[3].y + position.y);
 			glTexCoord2f(0, 0);
@@ -79,19 +80,33 @@ public class Square {
 		glEnd();
 		glPopMatrix();
 	}
-	
+
 	public void boundryDetection(Vector2D position) {
 		for (Boundry b : boundries) {
-			if (position.x > b.maxX-size){
-				position.x = b.maxX-size;
-			} else if (position.x < b.minX+size){
-				position.x = b.minX+size;
+			if (position.x > b.maxX - size) {
+				position.x = b.maxX - size;
+			} else if (position.x < b.minX + size) {
+				position.x = b.minX + size;
 			}
-			if (position.y > b.maxY-size) {
-				position.y = b.maxY-size;
-			} else if (position.y < b.minY+size) {
-				position.y = b.minY+size; 
+			if (position.y > b.maxY - size) {
+				position.y = b.maxY - size;
+			} else if (position.y < b.minY + size) {
+				position.y = b.minY + size;
 			}
 		}
+	}
+
+	public boolean collided(Square entity) {
+		boolean xtrue = false, ytrue = false;
+		if ((position.x - size < entity.position.x + entity.size)
+				&& (position.x + size > entity.position.x - entity.size)) {
+			xtrue = true;
+		}
+
+		if ((position.y - size < entity.position.y + entity.size)
+				&& (position.y + size > entity.position.y - entity.size)) {
+			ytrue = true;
+		}
+		return xtrue && ytrue;
 	}
 }

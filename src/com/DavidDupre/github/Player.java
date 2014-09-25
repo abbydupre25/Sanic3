@@ -24,9 +24,11 @@ public class Player {
 	private int rollCount = 0;
 	private double rollAzimuth;
 	private List<Projectile> projectiles = new ArrayList<Projectile>();
+	private List<Enemy> enemies;
 
-	public Player(int x, int y, int size, String imageUrl, List<Boundry> boundries) {
+	public Player(int x, int y, int size, String imageUrl, List<Boundry> boundries, List<Enemy> enemies) {
 		this.boundries = boundries;
+		this.enemies = enemies;
 		position.set(x, y);
 		this.image = new Square(size, imageUrl, boundries);
 	}
@@ -53,7 +55,7 @@ public class Player {
 		}
 		
 		for (int i = 0; i < projectiles.size(); i++) { // Needs to have the for loop to reference the list and delete elements
-			if (projectiles.get(i).distancePassed) {
+			if (projectiles.get(i).isFinished()) {
 				projectiles.remove(i);
 			}
 			
@@ -65,7 +67,7 @@ public class Player {
 	}
 
 	public void fire() {
-		projectiles.add(new Projectile(position.x, position.y, this, boundries));
+		projectiles.add(new Projectile(position.x, position.y, this, boundries, enemies));
 	}
 	
 	public void draw() {

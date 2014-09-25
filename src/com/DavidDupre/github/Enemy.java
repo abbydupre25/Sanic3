@@ -11,7 +11,9 @@ public class Enemy {
 	public int wobble = 0;
 	public double azimuth = 0;
 
-	private Square image;
+	public boolean dead = false;
+	
+	public Square image;
 
 	private double speed = 4.5;
 	private List<Player> players;
@@ -21,6 +23,14 @@ public class Enemy {
 		position.set(x, y);
 		this.image = new Square(size, imageUrl, boundries);
 		this.players = players;
+	}
+	
+	public void killNotify() { // Make actuall notification system
+		dead = true;
+	}
+	
+	public boolean dead() {
+		return dead;
 	}
 
 	public void update() {

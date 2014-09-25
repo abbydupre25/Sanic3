@@ -25,10 +25,10 @@ public class Game {
 	private static List<Boundry> boundries = new ArrayList<Boundry>();
 	private static List<Player> players = new ArrayList<Player>();
 	private static List<Enemy> enemies = new ArrayList<Enemy>();
-
+	
 	private static int width = 640;
-	private static int height = 480;
-
+	private static int height = 480;	
+	
 	private static Music music;
 	public static TrueTypeFont font;
 
@@ -44,8 +44,10 @@ public class Game {
 			}
 
 			for (Enemy e : enemies) {
-				e.update();
-				e.draw();
+				if (!e.dead()) {
+					e.update();
+					e.draw();
+				}
 			}
 			
 			Display.update();
@@ -54,7 +56,7 @@ public class Game {
 		Display.destroy();
 		System.exit(0);
 	}
-
+	
 	public static void init() throws SlickException {
 		try {
 			Display.setDisplayMode(new DisplayMode(width, height));
@@ -86,9 +88,9 @@ public class Game {
 		boundries.add(mapEdge);
 
 		players.add(new Player(width / 2, height / 2, 50, "res/sanic.png",
-				boundries));
+				boundries, enemies));
 		players.add(new Player(width / 2 - 50, height / 2, 40, "res/tails.png",
-				boundries));
+				boundries, enemies));
 
 		Random random = new Random();
 		enemies.add(new Enemy((int) (random.nextDouble() * width),
@@ -161,14 +163,6 @@ public class Game {
 						p.fire();
 						break;
 					}
-//					switch (Keyboard.getEventKey()) {
-//					case Keyboard.KEY_SPACE:
-//						p.roll();
-//						break;
-//					case Keyboard.KEY_1:
-//						p.fire();
-//						break;
-//					}
 				}
 				break;
 			}
