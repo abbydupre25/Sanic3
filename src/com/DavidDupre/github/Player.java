@@ -10,10 +10,14 @@ import com.DavidDupre.github.utils.Vector2D;
 public class Player {
 	public int wobble = 0;
 	public double azimuth = 0;
+	public double v_azimuth = 0;
+	
+	public boolean dead = false;
+	private int metaIndex = -1;
 	
 	public Vector2D position = new Vector2D();
 	
-	private Square image;
+	Square image;
 	
 	private double speed = 5;
 	private List<Boundry> boundries;
@@ -37,7 +41,7 @@ public class Player {
 		//Collision detection...sort of
 		image.boundryDetection(position);
 		
-		this.image.theta = azimuth;
+		this.image.theta = v_azimuth;
 		this.image.theta += Math.toDegrees(Math.sin(wobble))*.1;
 		switch (action) {
 		case Actions.ROLL:
@@ -66,6 +70,15 @@ public class Player {
 		}
 	}
 
+	public void killNotify(int metaIndex) { // Make actually notification system
+		dead = true;
+		this.metaIndex = metaIndex;
+	}
+
+	public int deadFlag() {
+		return metaIndex;
+	}
+	
 	public void fire() {
 		projectiles.add(new Projectile(position.x, position.y, this, boundries, enemies));
 		Sounds.intervention.play();

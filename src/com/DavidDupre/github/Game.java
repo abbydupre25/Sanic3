@@ -15,7 +15,6 @@ import static org.lwjgl.opengl.GL11.*;
 
 import org.lwjgl.opengl.Display;
 import org.newdawn.slick.Color;
-import org.newdawn.slick.Music;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.TrueTypeFont;
 
@@ -37,18 +36,19 @@ public class Game {
 			glClear(GL_COLOR_BUFFER_BIT);
 			pollInput();
 
-			for (Player p : players) {
-				p.update();
-				p.draw();
+			for (int i = 0; i < players.size(); i++) {
+				players.get(i).update();
+				players.get(i).draw();
 			}
 
-			for (Enemy e : enemies) {
-				if (!e.dead()) {
-					e.update();
-					e.draw();
+			for (int i = 0; i < enemies.size(); i++) {
+				if (enemies.get(i).deadFlag() == -1) {
+					enemies.get(i).update();
+					enemies.get(i).draw();
+				} else {
+					enemies.remove(enemies.get(i).deadFlag());
 				}
 			}
-			
 			Display.update();
 			Display.sync(60);
 		}
@@ -97,17 +97,27 @@ public class Game {
 				boundries, players));
 
 		Sounds.load();
-		Sounds.music.loop();
-		Sounds.music.setVolume(.25f);
+//		Sounds.music.loop();
+//		Sounds.music.setVolume(.25f);
 	}
 
 	public static void pollInput() {
 		// Handles keyboard and mouse input
 		boolean booped = false;
+		boolean m_booped = false;
 		boolean rollBooped = false;
 		boolean fireBooped = false;
-		
+
 		for (Player p : players) {
+			p.azimuth = Math.toDegrees(Math.atan2(
+					height - Mouse.getY() - p.position.y,
+					Mouse.getX() - p.position.x));
+			if (Mouse.getX() - p.position.x < 0) {
+				p.v_azimuth = 180;
+			} else {
+				p.v_azimuth = 0;
+			}
+			
 			if (p.equals(players.get(0))) {
 				if (Keyboard.isKeyDown(Keyboard.KEY_W)
 						|| Keyboard.isKeyDown(Keyboard.KEY_A)
@@ -151,10 +161,12 @@ public class Game {
 						System.exit(0);
 					}
 				} else {
-					if (Keyboard.getEventKey() == Keyboard.KEY_SPACE || rollBooped) {
+					if (Keyboard.getEventKey() == Keyboard.KEY_SPACE
+							|| rollBooped) {
 						rollBooped = true;
-						p.azimuth = Math.toDegrees(Math.atan2(height - Mouse.getY()
-								- p.position.y, Mouse.getX() - p.position.x));
+						p.azimuth = Math.toDegrees(Math.atan2(
+								height - Mouse.getY() - p.position.y,
+								Mouse.getX() - p.position.x));
 						p.roll();
 						p.azimuth = 0;
 						break;
@@ -162,16 +174,15 @@ public class Game {
 				}
 				break;
 			}
-			while (Mouse.next()) {
-				if (!Mouse.getEventButtonState()){
-					if (Mouse.getEventButton() == 0 || fireBooped){ //detect mouse release
+			while (Mouse.next() || m_booped) {
+				m_booped = true;
+				if (!Mouse.getEventButtonState() || fireBooped) {
+					if (Mouse.getEventButton() == 0 || fireBooped) { // Detect mouse movement
 						fireBooped = true;
-						p.azimuth = Math.toDegrees(Math.atan2(height - Mouse.getY()
-								- p.position.y, Mouse.getX() - p.position.x));
 						p.fire();
-						p.azimuth = 0;
 					}
 				}
+				break;
 			}
 		}
 	}

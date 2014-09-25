@@ -12,7 +12,8 @@ public class Enemy {
 	public double azimuth = 0;
 
 	public boolean dead = false;
-	
+	private int metaIndex = -1;
+
 	public Square image;
 
 	private double speed = 4.5;
@@ -24,21 +25,35 @@ public class Enemy {
 		this.image = new Square(size, imageUrl, boundries);
 		this.players = players;
 	}
-	
-	public void killNotify() { // Make actuall notification system
+
+	public void killNotify(int metaIndex) { // Make actually notification system
 		dead = true;
+		this.metaIndex = metaIndex;
 	}
-	
-	public boolean dead() {
-		return dead;
+
+	public int deadFlag() {
+		return metaIndex;
 	}
 
 	public void update() {
 		calcMove();
 		image.boundryDetection(position);
 
-		this.image.theta = azimuth;
+		if (Math.cos(Math.toRadians(azimuth)) < 0) {
+			this.image.theta = 180;
+		} else {
+			this.image.theta = 0;
+		}
+
 		this.image.theta += Math.toDegrees(Math.sin(wobble)) * .1;
+		
+		int nullEnemy = -1;
+		for (Player p : players) {
+			if (image.collided(p.image)) {
+				nullEnemy = players.indexOf(p);
+				p.killNotify(nullEnemy);
+			}
+		}
 	}
 
 	public void draw() {
@@ -64,9 +79,9 @@ public class Enemy {
 		}
 		azimuth = Math.toDegrees(Math.atan2(players.get(target).position.y
 				- position.y, players.get(target).position.x - position.x));
-		position.add(new Vector2D(speed * Math.cos(Math.toRadians(azimuth)), speed
-				* Math.sin(Math.toRadians(azimuth))));
-		
+		position.add(new Vector2D(speed * Math.cos(Math.toRadians(azimuth)),
+				speed * Math.sin(Math.toRadians(azimuth))));
+
 		wobble++;
 	}
 }
