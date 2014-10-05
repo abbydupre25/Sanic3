@@ -8,7 +8,6 @@ import java.util.Random;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
 
 import static org.lwjgl.opengl.GL11.*;
@@ -57,9 +56,11 @@ public class Game {
 	}
 
 	public static void init() throws SlickException {
+		//Put the display inside a swing canvas
+		GUI gui = new GUI(width, height);
+		gui.setDialogue("res/exampleDialogue.xml");
+
 		try {
-			Display.setDisplayMode(new DisplayMode(width, height));
-			Display.setTitle("Sanic 3");
 			Display.create();
 		} catch (LWJGLException e) {
 			e.printStackTrace();
@@ -97,8 +98,8 @@ public class Game {
 				boundries, players));
 
 		Sounds.load();
-//		Sounds.music.loop();
-//		Sounds.music.setVolume(.25f);
+		Sounds.music.loop();
+		Sounds.music.setVolume(.05f); //watch your ears m8
 	}
 
 	public static void pollInput() {

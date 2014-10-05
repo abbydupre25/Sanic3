@@ -16,5 +16,6 @@
 	</classpathentry>
 	<classpathentry kind="lib" path="lib/slick.jar"/>
 	<classpathentry kind="lib" path="lib/ini4j-0.5.2.jar"/>
+	<classpathentry kind="lib" path="lib/thumbnailator-0.4.7.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
