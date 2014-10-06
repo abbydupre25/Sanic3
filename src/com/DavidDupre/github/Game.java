@@ -1,6 +1,10 @@
 package com.DavidDupre.github;
 
 import java.awt.Font;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Random;
@@ -16,6 +20,9 @@ import org.lwjgl.opengl.Display;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.TrueTypeFont;
+import org.newdawn.slick.opengl.Texture;
+import org.newdawn.slick.opengl.TextureLoader;
+import org.newdawn.slick.util.ResourceLoader;
 
 import com.DavidDupre.github.utils.Boundry;
 
@@ -75,13 +82,29 @@ public class Game {
 		glClearColor(0f, 1f, 0f, 0f);
 
 		// Loading Screen stuff
-		Font awtFont = new Font("Comic Sans", Font.BOLD, 24);
-		font = new TrueTypeFont(awtFont, false);
 		glClear(GL_COLOR_BUFFER_BIT);
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-		font.drawString(width / 2 - 50, height / 2 - 20, "Loading...",
-				Color.yellow);
+		GL11.glEnable(GL11.GL_TEXTURE_2D);
+		Texture splash = null;
+		try {
+			splash = TextureLoader.getTexture("PNG", ResourceLoader.getResourceAsStream("res/sanicIII.png"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		GL11.glLoadIdentity();
+		Color.white.bind();
+		splash.bind();
+		GL11.glBegin(GL11.GL_QUADS);
+		GL11.glTexCoord2f(0,0);
+		GL11.glVertex2f(0,0);
+		GL11.glTexCoord2f(1,0);
+		GL11.glVertex2f(splash.getTextureWidth(),0);
+		GL11.glTexCoord2f(1,1);
+		GL11.glVertex2f(splash.getTextureWidth(),splash.getTextureHeight());
+		GL11.glTexCoord2f(0,1);
+		GL11.glVertex2f(0,splash.getTextureHeight());
+		GL11.glEnd();
 		Display.update();
 
 		Boundry mapEdge = new Boundry(0, width, 0, height);
