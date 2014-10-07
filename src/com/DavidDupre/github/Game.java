@@ -62,6 +62,7 @@ public class Game {
 		//Put the display inside a swing canvas
 		GUI gui = new GUI(width, height);
 		gui.setDialogue("res/exampleDialogue.xml");
+		gui.setInventory();
 
 		try {
 			Display.create();

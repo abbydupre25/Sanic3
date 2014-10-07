@@ -10,7 +10,9 @@ import javax.swing.JPanel;
 
 import org.lwjgl.opengl.Display;
 
-import dialogueTree.DialoguePanel;
+import panels.DialoguePanel;
+import panels.InventoryPanel;
+import panels.LowerPanel;
 
 /*
  * Creates an canvas to hold the game's display and various UIs.
@@ -22,8 +24,9 @@ public class GUI {
 	private JFrame rootFrame = new JFrame();
 	private JPanel rootPanel;
 	private JPanel gameView = new JPanel();
-	private JPanel dialoguePanel = new JPanel();
+	private LowerPanel lowerPanel;
 	private GridBagConstraints gbc = new GridBagConstraints();
+	private InventoryPanel inventory;
 	
 	public GUI(int width, int height){
 		canvas = new Canvas();
@@ -44,37 +47,51 @@ public class GUI {
 		rootFrame.setVisible(true);
 		rootFrame.setTitle("Sanic 3");
 		
+		inventory = new InventoryPanel(canvas.getWidth(), 200);
+		lowerPanel = inventory;
+		
 		gbc.gridx = 0;
 		gbc.gridy = 0;
 		gbc.weightx = 0;
 		rootPanel.add(gameView, gbc);	
 		
+		gbc.gridx = 0;
+		gbc.gridy = 1;
+		rootPanel.add(lowerPanel, gbc);
+		
 		try {
 			Display.setParent(canvas);
 		} catch (Exception e){
+			//fyuck you
 		}
 		
 		rootPanel.revalidate();
 	}
 		
-	private void setDialoguePanel(JPanel panel) {
+	private void setLowerPanel(LowerPanel panel) {
 		//remove the old panel
-		rootPanel.remove(dialoguePanel);
+		//lowerPanel.removeAll();
+		//rootPanel.remove(lowerPanel);
 		
 		//set the local panel to the new panel
-		dialoguePanel = panel;
+		lowerPanel = panel;
 		
 		//place appropriately
 		gbc.gridx = 0;
 		gbc.gridy = 1;
-		rootPanel.add(dialoguePanel, gbc);
+		rootPanel.add(lowerPanel, gbc);
 		
 		//refresh the root panel
 		rootPanel.revalidate();
+		rootFrame.validate();
 	}
 	
 	public void setDialogue(String filePath) {
 		DialoguePanel dp = new DialoguePanel(filePath, canvas.getWidth(), 200);
-		setDialoguePanel(dp);
+		setLowerPanel(dp);
+	}
+	
+	public void setInventory() {
+		setLowerPanel(inventory);
 	}
 }
