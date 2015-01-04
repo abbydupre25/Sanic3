@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="22" height="16" tilewidth="32" tileheight="32">
+ <tileset firstgid="1" name="grass-tiles-2-small" tilewidth="32" tileheight="32">
+  <image source="../grass-tiles-2-small.png" width="384" height="192"/>
+  <tile id="0">
+   <properties>
+    <property name="target" value="field2"/>
+    <property name="x" value="1"/>
+    <property name="y" value="7.5"/>
+   </properties>
+  </tile>
+ </tileset>
+ <tileset firstgid="73" name="rock" tilewidth="32" tileheight="32">
+  <image source="../rock.png" width="32" height="32"/>
+ </tileset>
+ <tileset firstgid="74" name="block" tilewidth="32" tileheight="32">
+  <image source="../block.png" trans="ff00ff" width="32" height="32"/>
+  <tile id="0">
+   <properties>
+    <property name="blocked" value="true"/>
+   </properties>
+  </tile>
+ </tileset>
+ <layer name="background" width="22" height="16">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAC7WUOwrEMAwF3Sm9dSnf/0LLggWzw9syxYMQSaOf7bPWOi/pueqrDdW1Fb4bto1/wyF3h9iCr+3DbDC3uKXcrHODzbpot8hlHyVGQwX/4bC30hycn7GP/pHNvJ5vqtUM1sX9pl45B9ZFcSdpb4zluTGXMWSzV9eYcp/AYyxr9hz/+XsOzJfuBueUcrDW2RvPQ6/f+fGe0ObzPXnM5ZlMu6Iq+A7b55dzNI+9+y48YrPeVpzfovQu2Gf01vv41QdXGoylgAUAAA==
+  </data>
+ </layer>
+ <layer name="portal" width="22" height="16">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAC2NgGAWjYGgCxiFm7igYBegAAINxYUiABQAA
+  </data>
+ </layer>
+ <layer name="blocked" width="22" height="16">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAC/NiYGDwohGmNhg1d9RcbGYPFXOHWviOmotqLi0wAD0/yYWABQAA
+  </data>
+ </layer>
+</map>

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<npc name="Belethor">
+		<init action="switch" id="1"></init>
+		<dialog id="0">
+			<text>Welcome to Belethor's! If I had a sister, I'd sell her in a second!</text>
+			<option action="dialog" id="1">What do you have for sale?</option>
+			<option action="dialog" id="4">Got any quests?</option>
+			<option action="quit">I have to go now</option>
+		</dialog>
+		<dialog id="1">
+			<text>All this stuff</text>
+			<option action="switch" id="0">I'll take the complementary sword</option>
+			<option action="switch" id="1">Nevermind, I don't want to buy anything</option>
+		</dialog>
+		<switch id="0" context="inv" item="sword">
+			<case value="true" action="dialog" id="3"></case>
+			<case value="false" action="dialog" id="2"></case>
+		</switch>
+		<dialog id="2">
+			<text>You got the sword!</text>
+			<option action="switch" id="1">Yay</option>
+			<giveItem path="res/items/sword.xml"></giveItem>
+		</dialog>
+		<dialog id="3">
+			<text>No way, man. You already have a sword.</text>
+			<option action="quit">But I want another one!</option>
+		</dialog>
+		<switch id="1" context="history" item="questClaw">
+			<case value="done" action="dialog" id="5"></case>
+			<case value="undiscovered" action="dialog" id="0"></case>
+			<case value="pending" action="switch" id="2"></case>
+		</switch>
+		<switch id="2" context="inv" item="goldenClaw">
+			<case value="true" action="dialog" id="8"></case>
+			<case value="false" action="dialog" id="6"></case>
+		</switch>
+		<dialog id="4">
+			<text>I'll give you some fast boots if you retrieve the golden claw...</text>
+			<option action="history" id="0">Deal</option>
+			<option action="quit">Not this shit again</option>
+		</dialog>
+		<history id="0" flag="questClaw" value="pending">
+			<redirect action="dialog" id="7"></redirect>
+		</history>
+		<history id="1" flag="questClaw" value="done">
+			<redirect action="dialog" id="7"></redirect>
+		</history>
+		<dialog id="5">
+			<text>Welcome to Belethor's! If I had a sister, I'd sell her in a second!</text>
+			<option action="dialog" id="1">What do you have for sale?</option>
+			<option action="quit">I have to go now</option>
+		</dialog>
+		<dialog id="6">
+			<text>Hello again, traveller! Have you retrieved the golden claw?</text>
+			<option action="dialog" id="7">There's only two levels and neither of them have the golden claw</option>
+			<option action="dialog" id="1">What do you have for sale?</option>
+			<option action="quit">I have to go now</option>
+		</dialog>
+		<dialog id="7">
+			<text>Was there something else you wanted to talk about?</text>
+			<option action="dialog" id="1">What do you have for sale?</option>
+			<option action="quit">I have to go now</option>
+		</dialog>
+		<dialog id="8">
+			<text>Hello again, traveller! Have you retrieved the golden claw?</text>
+			<option action="dialog" id="9">*Give golden claw*</option>
+			<option action="dialog" id="1">What do you have for sale?</option>
+			<option action="quit">I have to go now</option>
+		</dialog>
+		<dialog id="9">
+			<text>Excellent! Here are your fast boots, as promised.</text>
+			<option action="history" id="1">Thanks</option>
+			<giveItem path="res/items/fastBoots.xml"></giveItem>
+			<getItem name="goldenClaw" quantity="1"></getItem>
+		</dialog>
+	</npc>

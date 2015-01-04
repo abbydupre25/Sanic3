@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<mob>
+		<name>DudeManGuy</name>
+		<speed>.1</speed>
+		<dialogFile>res/dialog/exampleDialog.xml</dialogFile>
+	</mob>
