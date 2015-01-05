@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-	<gear>
+	<item>
 		<name>fastBoots</name>
 		<image>res/fastBoots.png</image>
 		<effect stat="speed" boost=".1"></effect>
-	</gear>
+	</item>

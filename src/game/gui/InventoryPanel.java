@@ -3,7 +3,6 @@ package game.gui;
 import game.Defines;
 import game.Inventory;
 import game.item.Item;
-import game.item.gear.Gear;
 
 import java.util.ArrayList;
 
@@ -65,8 +64,9 @@ public class InventoryPanel {
 				shiftSelected(-1);
 			}
 		} else if (input.isKeyPressed(Keyboard.KEY_E)){
-			System.out.println("equipped " + inv.getItems().get(selected).getName());
-			inv.getOwner().addGear((Gear) inv.getItems().get(selected));
+			inv.equip(selected);
+		} else if (input.isKeyPressed(Keyboard.KEY_U)){
+			inv.unequip(selected);
 		} else if (input.isKeyPressed(Keyboard.KEY_W)){
 			shiftSelected(-1);
 		} else if (input.isKeyPressed(Keyboard.KEY_S)){

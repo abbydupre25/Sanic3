@@ -43,11 +43,18 @@ public class PlayerPhysics extends PhysicsComponent {
 			break;
 		}
 	}
+	
+	public void setSpeed(float speed) {
+		this.speed = speed;
+	}
+	
+	public float getSpeed() {
+		return speed;
+	}
 
 	@Override
 	protected void initModifierDependents() {
 		// TODO Auto-generated method stub
 		
 	}
-
 }

@@ -9,7 +9,6 @@ import game.gui.GUI;
 import game.item.Item;
 import game.item.ItemInteract;
 import game.item.ItemRender;
-import game.item.gear.Gear;
 import game.mob.Mob;
 import game.mob.MobInput;
 import game.mob.MobPhysics;
@@ -70,26 +69,6 @@ public class ItemLoader {
 		}
 	}
 	
-	private static Item getItem(Document doc) {
-		String name = doc.getElementsByTagName("name").item(0).getTextContent();
-		final String imagePath = doc.getElementsByTagName("image").item(0).getTextContent();
-		
-		Item item = null;
-		try {
-			item = new Item(new Vector2D(), sbg,
-					new HashMap<ComponentType, Component>() {
-				{
-					put(ComponentType.RENDER, new ItemRender(imagePath));
-					put(ComponentType.INTERACT, new ItemInteract());
-				}
-			});
-		} catch (SlickException e) {
-			e.printStackTrace();
-		}
-		item.setName(name);
-		return item;
-	}
-	
 	private static Mob getMob(Document doc) {
 		String name = doc.getElementsByTagName("name").item(0).getTextContent();
 		final float speed = Float.parseFloat(doc.getElementsByTagName("speed").item(0).getTextContent());
@@ -123,7 +102,7 @@ public class ItemLoader {
 		return player;
 	}
 	
-	private static Gear getGear(Document doc) {
+	private static Item getItem(Document doc) {
 		String name = doc.getElementsByTagName("name").item(0).getTextContent();
 		final String imagePath = doc.getElementsByTagName("image").item(0).getTextContent();
 		NodeList effectNodes = doc.getElementsByTagName("effect");
@@ -135,9 +114,9 @@ public class ItemLoader {
 			effects.add(new Effect(stat, boost));
 		}
 		
-		Gear gear = null;
+		Item item = null;
 		try {
-			gear = new Gear(new Vector2D(), sbg, effects,
+			item = new Item(new Vector2D(), sbg, effects,
 					new HashMap<ComponentType, Component>() {
 				{
 					put(ComponentType.RENDER, new ItemRender(imagePath));
@@ -147,8 +126,8 @@ public class ItemLoader {
 		} catch (SlickException e) {
 			e.printStackTrace();
 		}
-		gear.setName(name);
-		return gear;
+		item.setName(name);
+		return item;
 	}
 	
 	public static Item getItem(String filePath) {
@@ -163,10 +142,6 @@ public class ItemLoader {
 	
 	public static Player getPlayer(String filePath, Inventory inv) {
 		return getPlayer(getDoc(filePath), inv);
-	}
-	
-	public static Gear getGear(String filePath) {
-		return getGear(getDoc(filePath));
 	}
 
 	public static void setGame(StateBasedGame game) {

@@ -7,7 +7,7 @@ import game.Effect;
 import game.GameObject;
 import game.Inventory;
 import game.component.Component;
-import game.item.gear.Gear;
+import game.item.Item;
 import game.map.Map;
 import game.map.MapManager;
 import game.util.Vector2D;
@@ -25,7 +25,8 @@ public class Player extends GameObject {
 	private Inventory inv;
 	private MapManager mm;
 	private HashMap<String, Float> stats;
-	private ArrayList<Gear> gears;
+	private ArrayList<Item> gears;
+	private HashMap<ComponentType, Component> components;
 
 	public Player(Vector2D pos, Inventory inv,
 			StateBasedGame sbg,
@@ -34,12 +35,13 @@ public class Player extends GameObject {
 		for (Component c : components.values()) {
 			c.setModifier(this);
 		}
+		this.components = components;
 		sprite = ((PlayerRender) components.get(ComponentType.RENDER))
 				.getInitialSprite();
 		setMoveDir(MoveDir.MOVE_NULL);
 		setAction(Action.ACTION_NULL);
 		this.inv = inv;
-		gears = new ArrayList<Gear>();
+		gears = new ArrayList<Item>();
 		stats = new HashMap<String, Float>();
 	}
 
@@ -81,23 +83,35 @@ public class Player extends GameObject {
 		this.mm = mm;
 	}
 	
-	public void addGear(Gear gear) {
-		gears.add(gear);
-		// Have to do it this dumb way because Floats aren't mutable
-		// Maybe I should stop using hashmaps for stuff like this
-		for(Effect e : gear.getEffects()) {
-			float originalValue = stats.get(e.getStat());
-			stats.remove(e.getStat());
-			stats.put(e.getStat(), originalValue + e.getBoost());
+	public void equip(Item item) {
+		if(!gears.contains(item)) {
+			gears.add(item);
+			// Have to do it this dumb way because Floats aren't mutable
+			// Maybe I should stop using hashmaps for stuff like this
+			for(Effect e : item.getEffects()) {
+				if(stats.containsKey(e.getStat())){
+					float originalValue = stats.get(e.getStat());
+					stats.remove(e.getStat());
+					stats.put(e.getStat(), originalValue + e.getBoost());
+				} else {
+					stats.put(e.getStat(), e.getBoost());
+				}
+				if(e.getStat().equals("speed")) { // TODO magic
+					PlayerPhysics physics = ((PlayerPhysics) components.get(ComponentType.PHYSICS));
+					physics.setSpeed(physics.getSpeed()+e.getBoost());
+				}
+			}
+			System.out.println("equipped " + item.getName());
 		}
 	}
 	
-	public void removeGear(Gear gear) {
-		gears.remove(gear);
-		for(Effect e : gear.getEffects()) {
+	public void unequip(Item item) {
+		gears.remove(item);
+		for(Effect e : item.getEffects()) {
 			float originalValue = stats.get(e.getStat());
 			stats.remove(e.getStat());
 			stats.put(e.getStat(), originalValue - e.getBoost());
 		}
+		System.out.println("unequipped " + item.getName());
 	}
 }

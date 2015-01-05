@@ -40,12 +40,14 @@ public class Inventory {
 		i.setPos(owner.getPos().clone());
 		i.setOnMap(true);
 		owner.getRequests().add(i);
+		unequip(index);
 		items.remove(i);
 	}
 	
 	public void remove(String name, int quantity) {
 		for(int i=0; i<items.size() && quantity>0; i++){
 			if(name.equals(items.get(i).getName())){
+				unequip(i);
 				items.remove(i);
 				quantity--;
 			}
@@ -63,5 +65,13 @@ public class Inventory {
 			}
 		}
 		return false;
+	}
+	
+	public void equip(int index) {
+		getOwner().equip(items.get(index));
+	}
+	
+	public void unequip(int index) {
+		getOwner().unequip(items.get(index));
 	}
 }
