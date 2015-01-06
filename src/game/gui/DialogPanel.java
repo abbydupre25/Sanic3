@@ -38,7 +38,7 @@ public class DialogPanel {
 	// Rendered objects
 	private ArrayList<String> lines;
 	private RoundedRectangle rect;
-	private boolean drawingOptions = false;
+	private boolean isDrawingOptions = false;
 
 	// TODO more than four options
 	public DialogPanel(Document doc, int width, int height, int x, int y,
@@ -161,7 +161,7 @@ public class DialogPanel {
 				g.drawString(lines.get(i), x + 10,
 						y + 10 + i * font.getHeight());
 			}
-			if (drawingOptions) {
+			if (isDrawingOptions) {
 				g.draw(rect);
 			}
 		}
@@ -182,7 +182,7 @@ public class DialogPanel {
 				lines.add(list.get(i));
 			}
 			lines.add("Press SPACE to continue...");
-			drawingOptions = false;
+			isDrawingOptions = false;
 		} else { // If everything fits nicely
 			for (int i = 0; i < list.size(); i++) {
 				lines.add(list.get(i));
@@ -196,14 +196,14 @@ public class DialogPanel {
 			rect = new RoundedRectangle(x + 10, newY + 10
 					+ optionPanel.getSelected() * font.getHeight(), width - 20,
 					font.getHeight(), 5);
-			drawingOptions = true;
+			isDrawingOptions = true;
 		}
 	}
 
 	public void update(GameContainer gc) {
 		Input input = gc.getInput();
 		if (input.isKeyPressed(Keyboard.KEY_SPACE)) {
-			if (drawingOptions) {
+			if (isDrawingOptions) {
 				Node optionNode = optionPanel.getSelectedNode();
 				select(optionNode);
 			} else {
@@ -377,6 +377,7 @@ public class DialogPanel {
 
 	public void setVisible(boolean visible) {
 		this.visible = visible;
+		
 	}
 
 	private ArrayList<String> wrap(String text, Font font, int width) {

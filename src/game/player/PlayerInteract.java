@@ -65,7 +65,7 @@ public class PlayerInteract extends InteractComponent {
 			if(portal.getTarget() == null){
 				System.out.println("NULL MAP");
 			}
-			((Player) gameObject).changeMap(portal.getTarget());
+			((Player) gameObject).setMap(portal.getTarget());
 			gameObject.setPos(new Vector2D(portal.getX()*Defines.SIZE, portal.getY()*Defines.SIZE));
 		}
 	}

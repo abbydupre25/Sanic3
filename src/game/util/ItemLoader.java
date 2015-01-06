@@ -1,5 +1,6 @@
 package game.util;
 
+import game.Defines;
 import game.Defines.ComponentType;
 import game.Effect;
 import game.GameObject;
@@ -30,6 +31,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
 import org.w3c.dom.Document;
+import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -37,7 +39,6 @@ import org.w3c.dom.NodeList;
 public class ItemLoader {
 	private static StateBasedGame sbg;
 	private static GUI gui;
-	private static Inventory inv;
 	
 	public static Document getDoc(String filePath) {
 		File file = new File(filePath);
@@ -62,7 +63,7 @@ public class ItemLoader {
 		case "mob":
 			return getMob(doc);
 		case "player":
-			return getPlayer(doc, inv);
+			return getPlayer(doc);
 		default:
 			System.out.println("Invalid type in " + filePath + " - " + type);
 			return null;
@@ -86,11 +87,13 @@ public class ItemLoader {
 		return mob;
 	}
 	
-	/** This doesn't actually work lmao */
-	private static Player getPlayer(Document doc, Inventory inv) {
+	private static Player getPlayer(Document doc) {
 		final float speed = Float.parseFloat(doc.getElementsByTagName("speed").item(0).getTextContent());
+		NamedNodeMap posAttributes = doc.getElementsByTagName("pos").item(0).getAttributes();
+		double posX = Integer.parseInt(posAttributes.getNamedItem("x").getTextContent())*Defines.SIZE;
+		double posY = Integer.parseInt(posAttributes.getNamedItem("y").getTextContent())*Defines.SIZE;
 
-		Player player = new Player(new Vector2D(), inv, sbg,
+		Player player = new Player(new Vector2D(posX, posY), sbg,
 				new HashMap<ComponentType, Component>() {
 					{
 						put(ComponentType.INPUT, new PlayerInput());
@@ -140,8 +143,8 @@ public class ItemLoader {
 		return getMob(doc);
 	}
 	
-	public static Player getPlayer(String filePath, Inventory inv) {
-		return getPlayer(getDoc(filePath), inv);
+	public static Player getPlayer(String filePath) {
+		return getPlayer(getDoc(filePath));
 	}
 
 	public static void setGame(StateBasedGame game) {
@@ -151,8 +154,4 @@ public class ItemLoader {
 	public static void setGUI(GUI legui) {
 		gui = legui;
 	}	
-	
-	public static void setInv(Inventory inventory) {
-		inv = inventory;
-	}
 }

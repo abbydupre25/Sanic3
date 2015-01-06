@@ -3,6 +3,7 @@ package game.states;
 import game.Defines;
 import game.Inventory;
 import game.gui.InventoryPanel;
+import game.player.Player;
 
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
@@ -16,9 +17,9 @@ public class InventoryState extends BasicGameState {
 	private Inventory inv;
 	private InventoryPanel ip;
 	
-	public InventoryState(int id, Inventory inv) {
+	public InventoryState(int id, Player player) {
 		this.id = id;
-		this.inv = inv;
+		this.inv = player.getInv();
 	}
 	
 	@Override

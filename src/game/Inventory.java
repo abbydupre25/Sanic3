@@ -10,8 +10,9 @@ public class Inventory {
 	private ArrayList<Item> items;
 	private Player owner;
 	
-	public Inventory() {
+	public Inventory(Player player) {
 		items = new ArrayList<Item>();
+		this.owner = player;
 	}
 	
 	public void add(Item item) {

@@ -3,6 +3,7 @@ package game.gui;
 import game.Defines;
 import game.History;
 import game.Inventory;
+import game.player.Player;
 
 import java.awt.List;
 import java.io.File;
@@ -37,10 +38,10 @@ public class GUI {
 	private Inventory inv;
 	private History history;
 	
-	public GUI(GameContainer container, Inventory inv, History history) throws SlickException {
+	public GUI(GameContainer container, Player player) throws SlickException {
 		this.gc = container;
-		this.inv = inv;
-		this.history = history;
+		this.inv = player.getInv();
+		this.history = player.getHistory();
 		width = Defines.WINDOW_WIDTH-20;
 		height = 120;
 		x = 10;
@@ -69,12 +70,16 @@ public class GUI {
 	}
 	
 	public void update() {
-		if(dp.isVisible()){
+		if(dp.isVisible()) {
+			dp.update(gc);
+		}
+		
+		/*if(dp.isVisible()){
 			gc.setPaused(true); // Pause game during dialogue
 			dp.update(gc);
 		} else {
 			gc.setPaused(false);
-		}
+		}*/
 	}
 	
 	public void render(GameContainer gc, Graphics g) {
@@ -87,5 +92,9 @@ public class GUI {
 	
 	public int getHeight() {
 		return height;
+	}
+	
+	public boolean isVisible() {
+		return dp.isVisible();
 	}
 }

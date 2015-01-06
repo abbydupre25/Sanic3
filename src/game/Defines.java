@@ -12,6 +12,8 @@ public class Defines {
 	public static final int ID_INV = 2;
 	public static final int ID_PAUSED = 3;
 	
+	public static final boolean FAST = true;
+	
 	public enum MoveDir {
 		MOVE_NULL, MOVE_UP, MOVE_DOWN, MOVE_LEFT, MOVE_RIGHT
 	}
@@ -29,7 +31,7 @@ public class Defines {
 	};
 	
 	public static final String MAP_CONFIG_PATH = "res/maps/mapLoader.xml";
-	public static final String PLAYER_PATH = "res/items/player.xml";
+	public static final String PLAYER_PATH = "res/player.xml";
 	
 	// TODO these need to match types in the xml files. Not seeing a way around this
 	public static final String PLAYER = "player";

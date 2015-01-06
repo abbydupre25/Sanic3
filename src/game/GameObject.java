@@ -122,4 +122,8 @@ public abstract class GameObject {
 	public void setOnMap(boolean state) {
 		onMap = state;
 	}
+	
+	public void setMovementLock(boolean state) {
+		// Overwrite this to actually do stuff
+	}
 }

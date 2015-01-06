@@ -37,6 +37,11 @@ public class Mob extends GameObject {
 		sprite.draw((int)pos.x, (int)pos.y);
 	}
 	
+	@Override
+	public void setMovementLock(boolean state) {
+		((MobInput) components.get(ComponentType.INPUT)).setLock(state);
+	}
+	
 	public void setSprite(Animation sprite){
 		this.sprite = sprite;
 	}

@@ -1,5 +1,8 @@
 package game;
 
+import game.gui.GUI;
+import game.map.MapLoader;
+import game.player.Player;
 import game.states.ExploreState;
 import game.states.InventoryState;
 import game.states.MenuState;
@@ -15,16 +18,19 @@ public class Game extends StateBasedGame {
 	public Game(String title) throws SlickException{
 		super(title);
 		ItemLoader.setGame(this);
-		Inventory inv = new Inventory(); // shared by multiple states
-		History history = new History();
-		this.addState(new MenuState(Defines.ID_MENU));
-		this.addState(new ExploreState(Defines.ID_EXPLORE, inv, history));
-		this.addState(new InventoryState(Defines.ID_INV, inv));
-		this.addState(new PausedState(Defines.ID_PAUSED));
 	}
 	
 	@Override
 	public void initStatesList(GameContainer gc) throws SlickException {
+		// Initialize here instead of the constructor because the openGL context is available
+		Player player = ItemLoader.getPlayer(Defines.PLAYER_PATH);
+		GUI gui = new GUI(gc, player);
+		ItemLoader.setGUI(gui);
+		MapLoader.load(gc, this, player);
+		this.addState(new MenuState(Defines.ID_MENU));
+		this.addState(new ExploreState(Defines.ID_EXPLORE, player, gui));
+		this.addState(new InventoryState(Defines.ID_INV, player));
+		this.addState(new PausedState(Defines.ID_PAUSED));
 		this.enterState(Defines.ID_MENU);
 	}
 	

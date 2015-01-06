@@ -1,15 +1,15 @@
 package game.player;
 
+import game.Defines;
 import game.Defines.Action;
 import game.Defines.ComponentType;
 import game.Defines.MoveDir;
 import game.Effect;
 import game.GameObject;
+import game.History;
 import game.Inventory;
 import game.component.Component;
 import game.item.Item;
-import game.map.Map;
-import game.map.MapManager;
 import game.util.Vector2D;
 
 import java.util.ArrayList;
@@ -23,13 +23,12 @@ import org.newdawn.slick.state.StateBasedGame;
 public class Player extends GameObject {
 	private Animation sprite;
 	private Inventory inv;
-	private MapManager mm;
+	private History history;
 	private HashMap<String, Float> stats;
 	private ArrayList<Item> gears;
 	private HashMap<ComponentType, Component> components;
 
-	public Player(Vector2D pos, Inventory inv,
-			StateBasedGame sbg,
+	public Player(Vector2D pos, StateBasedGame sbg,
 			HashMap<ComponentType, Component> components) {
 		super(pos, sbg, components);
 		for (Component c : components.values()) {
@@ -40,7 +39,8 @@ public class Player extends GameObject {
 				.getInitialSprite();
 		setMoveDir(MoveDir.MOVE_NULL);
 		setAction(Action.ACTION_NULL);
-		this.inv = inv;
+		this.inv = new Inventory(this);
+		this.history = new History();
 		gears = new ArrayList<Item>();
 		stats = new HashMap<String, Float>();
 	}
@@ -74,44 +74,51 @@ public class Player extends GameObject {
 		this.inv = inv;
 	}
 	
-	public void changeMap(Map map) {
-		mm.setMap(map);
-		setMap(map);
+	public History getHistory() {
+		return history;
 	}
-	
-	public void setMapManager(MapManager mm) {
-		this.mm = mm;
+
+	public void setHistory(History history) {
+		this.history = history;
 	}
-	
+
 	public void equip(Item item) {
-		if(!gears.contains(item)) {
+		if (!gears.contains(item) || Defines.FAST) {
 			gears.add(item);
 			// Have to do it this dumb way because Floats aren't mutable
 			// Maybe I should stop using hashmaps for stuff like this
-			for(Effect e : item.getEffects()) {
-				if(stats.containsKey(e.getStat())){
+			for (Effect e : item.getEffects()) {
+				if (stats.containsKey(e.getStat())) {
 					float originalValue = stats.get(e.getStat());
 					stats.remove(e.getStat());
 					stats.put(e.getStat(), originalValue + e.getBoost());
 				} else {
 					stats.put(e.getStat(), e.getBoost());
 				}
-				if(e.getStat().equals("speed")) { // TODO magic
-					PlayerPhysics physics = ((PlayerPhysics) components.get(ComponentType.PHYSICS));
-					physics.setSpeed(physics.getSpeed()+e.getBoost());
+				if (e.getStat().equals("speed")) { // TODO magic
+					PlayerPhysics physics = ((PlayerPhysics) components
+							.get(ComponentType.PHYSICS));
+					physics.setSpeed(physics.getSpeed() + e.getBoost());
 				}
 			}
 			System.out.println("equipped " + item.getName());
 		}
 	}
-	
+
 	public void unequip(Item item) {
-		gears.remove(item);
-		for(Effect e : item.getEffects()) {
-			float originalValue = stats.get(e.getStat());
-			stats.remove(e.getStat());
-			stats.put(e.getStat(), originalValue - e.getBoost());
+		if(gears.contains(item)){
+			gears.remove(item);
+			for (Effect e : item.getEffects()) {
+				float originalValue = stats.get(e.getStat());
+				stats.remove(e.getStat());
+				stats.put(e.getStat(), originalValue - e.getBoost());
+			}
+			System.out.println("unequipped " + item.getName());
 		}
-		System.out.println("unequipped " + item.getName());
+	}
+
+	@Override
+	public void setMovementLock(boolean state) {
+		((PlayerInput) components.get(ComponentType.INPUT)).setLock(state);
 	}
 }
