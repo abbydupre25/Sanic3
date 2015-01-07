@@ -9,7 +9,6 @@ import java.util.ArrayList;
 
 import org.lwjgl.input.Keyboard;
 import org.newdawn.slick.Color;
-import org.newdawn.slick.Font;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
@@ -20,7 +19,10 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-// TODO this whole class could be cleaned up a lot
+/** Parses and displays dialog from XML files.
+ * Current Limitations: 
+ * (1) Cap to number of options (depends on size of panel - typically four options);
+ * (2) Options cannot wrap. */
 public class DialogPanel {
 	private Document doc;
 	private NPCTextPanel textPanel;
@@ -40,7 +42,6 @@ public class DialogPanel {
 	private RoundedRectangle rect;
 	private boolean isDrawingOptions = false;
 
-	// TODO more than four options
 	public DialogPanel(Document doc, int width, int height, int x, int y,
 			TrueTypeFont font, Inventory inv, History history) {
 		this.doc = doc;
@@ -274,6 +275,7 @@ public class DialogPanel {
 		}
 	}
 
+	@SuppressWarnings("serial")
 	private class OptionButton extends Button {
 		private Node node;
 		private String text;
@@ -287,10 +289,6 @@ public class DialogPanel {
 			return node;
 		}
 
-		public void setNode(Node node) {
-			this.node = node;
-		}
-
 		public String getText() {
 			return text;
 		}
@@ -301,7 +299,6 @@ public class DialogPanel {
 	}
 
 	private class NPCTextPanel {
-		private String text;
 		private String nextString;
 		private ArrayList<String> list;
 
@@ -319,13 +316,8 @@ public class DialogPanel {
 			setText(getNPCText(id));
 		}
 
-		public String getText() {
-			return text;
-		}
-
 		public void setText(String text) {
-			this.text = text;
-			list = wrap(text, font, width - 10);
+			list = GUI.wrap(text, font, width - 10);
 			if (list.size() > maxLines) {
 				int beginIndex = 0;
 				for (int i = 0; i < maxLines; i++) {
@@ -335,14 +327,6 @@ public class DialogPanel {
 			} else {
 				nextString = "";
 			}
-		}
-
-		public String getNextString() {
-			return nextString;
-		}
-
-		public void setNextString(String nextString) {
-			this.nextString = nextString;
 		}
 
 		public ArrayList<String> getList() {
@@ -378,44 +362,5 @@ public class DialogPanel {
 	public void setVisible(boolean visible) {
 		this.visible = visible;
 		
-	}
-
-	private ArrayList<String> wrap(String text, Font font, int width) {
-		ArrayList<String> list = new ArrayList<String>();
-		String str = text;
-		String line = "";
-
-		int i = 0;
-		int lastSpace = -1;
-		while (i < str.length()) {
-			char c = str.charAt(i);
-			if (Character.isWhitespace(c)) {
-				lastSpace = i;
-			}
-
-			if (c == '\n' || font.getWidth(line + c) > width) {
-				int split = lastSpace != 1 ? lastSpace : i;
-				int splitTrimmed = split;
-
-				if (lastSpace != -1 && split < str.length() - 1) {
-					splitTrimmed++;
-				}
-
-				line = str.substring(0, split);
-				str = str.substring(splitTrimmed);
-
-				list.add(line);
-				line = "";
-				i = 0;
-				lastSpace = -1;
-			} else {
-				line += c;
-				i++;
-			}
-		}
-		if (str.length() != 0) {
-			list.add(str);
-		}
-		return list;
 	}
 }

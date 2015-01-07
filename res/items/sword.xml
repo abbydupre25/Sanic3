@@ -2,4 +2,6 @@
 	<item>
 		<name>sword</name>
 		<image>res/sword.png</image>
+		<desc>The sword is almost as sharp as sanic is fast</desc>
+		<type>weapon</type>
 	</item>

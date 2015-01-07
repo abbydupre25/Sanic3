@@ -31,6 +31,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -108,6 +109,20 @@ public class ItemLoader {
 	private static Item getItem(Document doc) {
 		String name = doc.getElementsByTagName("name").item(0).getTextContent();
 		final String imagePath = doc.getElementsByTagName("image").item(0).getTextContent();
+		final String desc;
+		Node descNode = doc.getElementsByTagName("desc").item(0);
+		if(descNode==null){
+			desc = "";
+		} else {
+			desc = descNode.getTextContent();
+		}
+		final String gearType;
+		Node gearTypeNode = doc.getElementsByTagName("type").item(0);
+		if(gearTypeNode==null){
+			gearType = "";
+		} else {
+			gearType = gearTypeNode.getTextContent();
+		}
 		NodeList effectNodes = doc.getElementsByTagName("effect");
 		ArrayList<Effect> effects = new ArrayList<Effect>();
 		for(int i=0; i<effectNodes.getLength(); i++){
@@ -130,6 +145,8 @@ public class ItemLoader {
 			e.printStackTrace();
 		}
 		item.setName(name);
+		item.setDescription(desc);
+		item.setGearType(gearType);
 		return item;
 	}
 	

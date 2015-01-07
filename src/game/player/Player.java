@@ -19,13 +19,11 @@ import org.newdawn.slick.Animation;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.state.StateBasedGame;
 
-// TODO can't wear two hats / pants / armors at once
 public class Player extends GameObject {
 	private Animation sprite;
 	private Inventory inv;
 	private History history;
 	private HashMap<String, Float> stats;
-	private ArrayList<Item> gears;
 	private HashMap<ComponentType, Component> components;
 
 	public Player(Vector2D pos, StateBasedGame sbg,
@@ -41,7 +39,6 @@ public class Player extends GameObject {
 		setAction(Action.ACTION_NULL);
 		this.inv = new Inventory(this);
 		this.history = new History();
-		gears = new ArrayList<Item>();
 		stats = new HashMap<String, Float>();
 	}
 
@@ -83,37 +80,32 @@ public class Player extends GameObject {
 	}
 
 	public void equip(Item item) {
-		if (!gears.contains(item) || Defines.FAST) {
-			gears.add(item);
-			// Have to do it this dumb way because Floats aren't mutable
-			// Maybe I should stop using hashmaps for stuff like this
-			for (Effect e : item.getEffects()) {
-				if (stats.containsKey(e.getStat())) {
-					float originalValue = stats.get(e.getStat());
-					stats.remove(e.getStat());
-					stats.put(e.getStat(), originalValue + e.getBoost());
-				} else {
-					stats.put(e.getStat(), e.getBoost());
-				}
-				if (e.getStat().equals("speed")) { // TODO magic
-					PlayerPhysics physics = ((PlayerPhysics) components
-							.get(ComponentType.PHYSICS));
-					physics.setSpeed(physics.getSpeed() + e.getBoost());
-				}
+		for (Effect e : item.getEffects()) {
+			if (stats.containsKey(e.getStat())) {
+				float originalValue = stats.get(e.getStat());
+				stats.remove(e.getStat());
+				stats.put(e.getStat(), originalValue + e.getBoost());
+			} else {
+				stats.put(e.getStat(), e.getBoost());
 			}
-			System.out.println("equipped " + item.getName());
+			if (e.getStat().equals("speed")) { // TODO magic
+				PlayerPhysics physics = ((PlayerPhysics) components
+						.get(ComponentType.PHYSICS));
+				physics.setSpeed(physics.getSpeed() + e.getBoost());
+			}
 		}
 	}
 
 	public void unequip(Item item) {
-		if(gears.contains(item)){
-			gears.remove(item);
-			for (Effect e : item.getEffects()) {
-				float originalValue = stats.get(e.getStat());
-				stats.remove(e.getStat());
-				stats.put(e.getStat(), originalValue - e.getBoost());
+		for (Effect e : item.getEffects()) {
+			float originalValue = stats.get(e.getStat());
+			stats.remove(e.getStat());
+			stats.put(e.getStat(), originalValue - e.getBoost());
+			if (e.getStat().equals("speed")) { // TODO magic
+				PlayerPhysics physics = ((PlayerPhysics) components
+						.get(ComponentType.PHYSICS));
+				physics.setSpeed(physics.getSpeed() - e.getBoost());
 			}
-			System.out.println("unequipped " + item.getName());
 		}
 	}
 

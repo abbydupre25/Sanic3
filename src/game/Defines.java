@@ -12,7 +12,7 @@ public class Defines {
 	public static final int ID_INV = 2;
 	public static final int ID_PAUSED = 3;
 	
-	public static final boolean FAST = true;
+	public static final boolean FAST = false;
 	
 	public enum MoveDir {
 		MOVE_NULL, MOVE_UP, MOVE_DOWN, MOVE_LEFT, MOVE_RIGHT
@@ -28,6 +28,10 @@ public class Defines {
 	
 	public static final String[] invisibleLayers = new String[]{
 			"objects", "portal", "blocked"
+	};
+	
+	public static final String[] gearTypes = new String[]{
+		"weapon", "shoes"
 	};
 	
 	public static final String MAP_CONFIG_PATH = "res/maps/mapLoader.xml";

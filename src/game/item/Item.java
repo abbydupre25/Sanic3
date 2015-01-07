@@ -4,7 +4,6 @@ import game.Defines.ComponentType;
 import game.Effect;
 import game.GameObject;
 import game.component.Component;
-import game.map.Map;
 import game.util.Vector2D;
 
 import java.util.ArrayList;
@@ -18,6 +17,8 @@ public class Item extends GameObject {
 	private Image image;
 	private String name;
 	private ArrayList<Effect> effects;
+	private String desc; // description
+	private String gearType;
 
 	public Item(Vector2D pos, StateBasedGame sbg,
 			HashMap<ComponentType, Component> components) {
@@ -33,6 +34,8 @@ public class Item extends GameObject {
 		this.setImage(((ItemRender) components.get(ComponentType.RENDER)).getImage());
 		setName("unnamed");
 		this.effects = effects;
+		this.desc = "";
+		this.setGearType("");
 	}
 
 	@Override
@@ -65,5 +68,21 @@ public class Item extends GameObject {
 	
 	public ArrayList<Effect> getEffects() {
 		return effects;
+	}
+	
+	public String getDescription() {
+		return desc;
+	}
+	
+	public void setDescription(String desc) {
+		this.desc = desc;
+	}
+
+	public String getGearType() {
+		return gearType;
+	}
+
+	public void setGearType(String gearType) {
+		this.gearType = gearType;
 	}
 }

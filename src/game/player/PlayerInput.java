@@ -5,6 +5,7 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Input;
 
 import game.Defines;
+import game.Defines.Action;
 import game.Defines.MoveDir;
 import game.component.InputComponent;
 
@@ -61,6 +62,7 @@ public class PlayerInput extends InputComponent {
 			gameObject.setAction(action);
 		} else {
 			gameObject.setMoveDir(MoveDir.MOVE_NULL);
+			gameObject.setAction(Action.ACTION_NULL);
 		}
 	}
 
