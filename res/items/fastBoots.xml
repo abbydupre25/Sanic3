@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 	<item>
-		<name>fastBoots</name>
+		<name>Fast Boots</name>
 		<image>res/fastBoots.png</image>
 		<effect stat="speed" boost=".5"></effect>
 		<desc>2 go fest. No other option here.</desc>

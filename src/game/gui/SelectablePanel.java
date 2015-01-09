@@ -36,7 +36,7 @@ public abstract class SelectablePanel {
 	
 	public abstract void setActive(boolean active);
 	
-	public boolean getActive() {
+	public boolean isActive() {
 		return active;
 	}
 }

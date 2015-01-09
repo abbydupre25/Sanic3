@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 	<item>
-		<name>sword</name>
+		<name>Sword</name>
 		<image>res/sword.png</image>
+		<effect stat="attack" boost="2"></effect>
 		<desc>The sword is almost as sharp as sanic is fast</desc>
 		<type>weapon</type>
 	</item>

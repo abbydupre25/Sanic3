@@ -1,6 +1,5 @@
 package game.player;
 
-import game.Defines;
 import game.Defines.Action;
 import game.Defines.ComponentType;
 import game.Defines.MoveDir;
@@ -12,7 +11,6 @@ import game.component.Component;
 import game.item.Item;
 import game.util.Vector2D;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.newdawn.slick.Animation;

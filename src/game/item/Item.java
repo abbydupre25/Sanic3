@@ -85,4 +85,8 @@ public class Item extends GameObject {
 	public void setGearType(String gearType) {
 		this.gearType = gearType;
 	}
+	
+	public boolean isGear() {
+		return !gearType.equals("");
+	}
 }

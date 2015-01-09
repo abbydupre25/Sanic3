@@ -41,4 +41,5 @@ public class Defines {
 	public static final String PLAYER = "player";
 	public static final String MOB = "mob";
 	public static final String ITEM = "item";
+	public static final String CURRENCY_NAME = "rang";
 }

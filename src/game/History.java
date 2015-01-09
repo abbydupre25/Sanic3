@@ -17,6 +17,31 @@ public class History {
 		this.quests = new HashMap<String, String>();
 	}
 	
+	private class Quest {
+		private HashMap<String, String> objectives;
+		private String state;
+		
+		public Quest() {
+			state = allowedStates.get(0);
+		}
+		
+		public String getState() {
+			return state;
+		}
+		
+		public void setState(String state) {
+			this.state = state;
+		}
+
+		public HashMap<String, String> getObjectives() {
+			return objectives;
+		}
+
+		public void setObjectives(HashMap<String, String> objectives) {
+			this.objectives = objectives;
+		}
+	}
+	
 	/** Creates new flag with default value 'undiscovered' */
 	public void add(String flagName) {
 		add(flagName, "undiscovered");

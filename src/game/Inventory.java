@@ -11,6 +11,7 @@ public class Inventory {
 	private ArrayList<Item> items;
 	private Player owner;
 	private HashMap<String, GearSlot> gearSlots;
+	private int rangs; // le currency
 	
 	public Inventory(Player player) {
 		items = new ArrayList<Item>();
@@ -19,8 +20,7 @@ public class Inventory {
 		for(int i=0; i<Defines.gearTypes.length; i++){
 			gearSlots.put(Defines.gearTypes[i], new GearSlot());
 		}
-		addFromFile("res/items/fastBoots.xml");
-		addFromFile("res/items/goldenClaw.xml");
+		rangs = 200;
 	}
 	
 	public class GearSlot {
@@ -55,7 +55,19 @@ public class Inventory {
 		items.add(item);
 	}
 	
-	public void addFromFile(String filePath) {
+	/** Pass String CURRENCY_TYPE to also work with currency */
+	// TODO this could cause poor performance on high quantities
+	public void addFromFile(String filePath, int quantity) {
+		if(filePath.equals(Defines.CURRENCY_NAME)){
+			rangs += quantity;
+		} else {
+			for(int i=0; i<quantity; i++){
+				addFromFile(filePath);
+			}
+		}
+	}
+	
+	public void addFromFile(String filePath){
 		add(ItemLoader.getItem(filePath));
 	}
 	
@@ -80,16 +92,32 @@ public class Inventory {
 	}
 	
 	public void remove(String name, int quantity) {
-		for(int i=0; i<items.size() && quantity>0; i++){
-			if(name.equals(items.get(i).getName())){
-				items.remove(i);
-				quantity--;
+		if(name.equals(Defines.CURRENCY_NAME)){
+			rangs -= quantity;
+		} else {
+			for(int i=0; i<items.size() && quantity>0; i++){
+				if(name.equals(items.get(i).getName())){
+					items.remove(i);
+					quantity--;
+				}
+			}
+			if(quantity>0){
+				System.out.println("Payment failed for " + name);
 			}
 		}
-		if(quantity>0){
-			// There should be a better way to handle this...
-			System.out.println("Insufficient " + name + " in inventory");
+	}
+	
+	public int count(String key) {
+		if(key.equals(Defines.CURRENCY_NAME)){
+			return rangs;
 		}
+		int count = 0;
+		for(Item i : items){
+			if(key.equals(i.getName())){
+				count++;
+			}
+		}
+		return count;
 	}
 	
 	public boolean contains(String key) {
@@ -126,9 +154,18 @@ public class Inventory {
 		if(gearSlots.containsKey(key)){
 			GearSlot gearSlot = gearSlots.get(key);
 			Item item = gearSlot.getGear();
+			getOwner().unequip(item);
 			gearSlot.empty();
 			items.add(item);
 			System.out.println("unequipped " + item.getName());
 		}
+	}
+
+	public int getRangs() {
+		return rangs;
+	}
+
+	public void setRangs(int rangs) {
+		this.rangs = rangs;
 	}
 }

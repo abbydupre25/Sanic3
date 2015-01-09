@@ -1,5 +1,6 @@
 package game.gui;
 
+import game.Defines;
 import game.History;
 import game.Inventory;
 import game.util.ItemLoader;
@@ -19,10 +20,11 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-/** Parses and displays dialog from XML files.
- * Current Limitations: 
- * (1) Cap to number of options (depends on size of panel - typically four options);
- * (2) Options cannot wrap. */
+/**
+ * Parses and displays dialog from XML files. Current Limitations: (1) Cap to
+ * number of options (depends on size of panel - typically four options); (2)
+ * Options cannot wrap.
+ */
 public class DialogPanel {
 	private Document doc;
 	private NPCTextPanel textPanel;
@@ -94,6 +96,9 @@ public class DialogPanel {
 				targetValue = inv.contains(param) ? "true" : "false";
 			} else if (context.equals("history")) {
 				targetValue = history.get(param);
+			} else if (context.equals("bank")) {
+				targetValue = inv.count(Defines.CURRENCY_NAME) >= Integer
+						.parseInt(param) ? "true" : "false";
 			}
 			NodeList caseNodes = e.getElementsByTagName("case");
 			Node caseNode = null;
@@ -126,8 +131,11 @@ public class DialogPanel {
 			for (int i = 0; i < items.getLength(); i++) {
 				String filePath = items.item(i).getAttributes()
 						.getNamedItem("path").getTextContent();
-				inv.add(ItemLoader.getItem(filePath));
-				System.out.println("added " + filePath + " to inventory");
+				int quantity = Integer.parseInt(items.item(i).getAttributes()
+						.getNamedItem("quantity").getTextContent());
+				inv.addFromFile(filePath, quantity);
+				System.out.println("added " + quantity + " " + filePath
+						+ " to inventory");
 			}
 		}
 
@@ -139,9 +147,13 @@ public class DialogPanel {
 						.getNamedItem("name").getTextContent();
 				int quantity = Integer.parseInt(items.item(i).getAttributes()
 						.getNamedItem("quantity").getTextContent());
-				inv.remove(name, quantity);
-				System.out.println("removed " + quantity + " " + name
-						+ " from inventory");
+				if (inv.count(name) >= quantity) {
+					inv.remove(name, quantity);
+					System.out.println("removed " + quantity + " " + name
+							+ " from inventory");
+				} else {
+					System.out.println("insufficient " + name);
+				}
 			}
 		}
 	}
@@ -176,7 +188,7 @@ public class DialogPanel {
 		lines = new ArrayList<String>();
 		ArrayList<String> list = textPanel.getList();
 		ArrayList<OptionButton> buttons = optionPanel.getButtons();
-		
+
 		// If there is no room
 		if (list.size() + buttons.size() > maxLines + 1 || buttons.size() == 0) {
 			for (int i = 0; i < list.size() && i < maxLines; i++) {
@@ -317,7 +329,7 @@ public class DialogPanel {
 		}
 
 		public void setText(String text) {
-			list = GUI.wrap(text, font, width - 10);
+			list = TextPanel.wrap(text, font, width - 10);
 			if (list.size() > maxLines) {
 				int beginIndex = 0;
 				for (int i = 0; i < maxLines; i++) {
@@ -361,6 +373,6 @@ public class DialogPanel {
 
 	public void setVisible(boolean visible) {
 		this.visible = visible;
-		
+
 	}
 }

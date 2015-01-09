@@ -27,7 +27,7 @@ public class InventoryState extends BasicGameState {
 			throws SlickException {
 		java.awt.Font awtFont = new java.awt.Font("Verdana", java.awt.Font.BOLD, 14);
 		TrueTypeFont font = new TrueTypeFont(awtFont, false);
-		ip = new InventoryPanel(50, 50, Defines.WINDOW_WIDTH-100, Defines.WINDOW_HEIGHT-100, inv, font);
+		ip = new InventoryPanel(20, 20, Defines.WINDOW_WIDTH-40, Defines.WINDOW_HEIGHT-40, inv, font);
 	}
 
 	@Override
