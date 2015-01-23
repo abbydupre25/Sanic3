@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<event>
+		<init action="switch" id="0"></init>
+		<switch id="0" context="history" item="res/quests/clawQuest.xml">
+			<case value="0" action="quest" id="0"></case>
+		</switch>
+		<quest id="0" path="res/quests/clawQuest.xml">
+			<objective id="0" complete="true"></objective>
+			<objective id="1" complete="false"></objective>
+		</quest>
+	</event>

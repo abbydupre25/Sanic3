@@ -1,5 +1,6 @@
 package game.item;
 
+import game.Ability;
 import game.Defines.ComponentType;
 import game.Effect;
 import game.GameObject;
@@ -17,6 +18,7 @@ public class Item extends GameObject {
 	private Image image;
 	private String name;
 	private ArrayList<Effect> effects;
+	private ArrayList<Ability> abilities;
 	private String desc; // description
 	private String gearType;
 
@@ -27,6 +29,11 @@ public class Item extends GameObject {
 	
 	public Item(Vector2D pos, StateBasedGame sbg, ArrayList<Effect> effects,
 			HashMap<ComponentType, Component> components) {
+		this(pos, sbg, new ArrayList<Effect>(), new ArrayList<Ability>(), components);
+	}
+	
+	public Item(Vector2D pos, StateBasedGame sbg, ArrayList<Effect> effects, ArrayList<Ability> abilities,
+			HashMap<ComponentType, Component> components) {
 		super(pos, sbg, components);
 		for (Component c: components.values()) {
 			c.setModifier(this);
@@ -34,6 +41,7 @@ public class Item extends GameObject {
 		this.setImage(((ItemRender) components.get(ComponentType.RENDER)).getImage());
 		setName("unnamed");
 		this.effects = effects;
+		this.setAbilities(abilities);
 		this.desc = "";
 		this.setGearType("");
 	}
@@ -88,5 +96,17 @@ public class Item extends GameObject {
 	
 	public boolean isGear() {
 		return !gearType.equals("");
+	}
+
+	public ArrayList<Ability> getAbilities() {
+		return abilities;
+	}
+
+	public void setAbilities(ArrayList<Ability> abilities) {
+		this.abilities = abilities;
+	}
+	
+	public void actionOnDrop() {
+		((ItemInteract) components.get(ComponentType.INTERACT)).actionOnDrop();
 	}
 }

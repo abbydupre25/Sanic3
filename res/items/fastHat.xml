@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<item>
+		<name>Fast Fedora</name>
+		<image>res/fastHat.png</image>
+		<ability move="run"></ability>
+		<desc>Many item with same effect. Will it blend?</desc>
+		<type>hat</type>
+	</item>

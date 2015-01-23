@@ -1,12 +1,13 @@
 package game.gui;
 
 import game.Defines;
-import game.History;
-import game.Inventory;
+import game.Quest;
+import game.player.Player;
 import game.util.ItemLoader;
 
 import java.awt.Button;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.lwjgl.input.Keyboard;
 import org.newdawn.slick.Color;
@@ -36,8 +37,7 @@ public class DialogPanel {
 	private int y;
 	private TrueTypeFont font;
 	private int maxLines;
-	private Inventory inv;
-	private History history;
+	private Player player;
 
 	// Rendered objects
 	private ArrayList<String> lines;
@@ -45,15 +45,14 @@ public class DialogPanel {
 	private boolean isDrawingOptions = false;
 
 	public DialogPanel(Document doc, int width, int height, int x, int y,
-			TrueTypeFont font, Inventory inv, History history) {
+			TrueTypeFont font, Player player) {
 		this.doc = doc;
 		this.width = width;
 		this.height = height;
 		this.x = x;
 		this.y = y;
 		this.font = font;
-		this.inv = inv;
-		this.history = history;
+		this.player = player;
 		this.maxLines = (height - 20) / font.getHeight() - 1;
 		lines = new ArrayList<String>();
 
@@ -93,11 +92,20 @@ public class DialogPanel {
 			String param = e.getAttribute("item");
 			String targetValue = "false";
 			if (context.equals("inv")) {
-				targetValue = inv.contains(param) ? "true" : "false";
+				targetValue = player.getInv().contains(param) ? "true" : "false";
 			} else if (context.equals("history")) {
-				targetValue = history.get(param);
+				if(!player.getHistory().getQuests().containsKey(param)) {
+					targetValue = "undiscovered";
+				} else {
+					Quest quest = player.getHistory().getQuests().get(param);
+					if(quest.getState().equals("done")){
+						targetValue = "done";
+					} else {
+						targetValue = String.valueOf(quest.getObjectiveID());
+					}
+				}
 			} else if (context.equals("bank")) {
-				targetValue = inv.count(Defines.CURRENCY_NAME) >= Integer
+				targetValue = player.getInv().count(Defines.CURRENCY_NAME) >= Integer
 						.parseInt(param) ? "true" : "false";
 			}
 			NodeList caseNodes = e.getElementsByTagName("case");
@@ -113,9 +121,31 @@ public class DialogPanel {
 		case "history":
 			id = Integer.parseInt(optionNode.getAttributes().getNamedItem("id")
 					.getTextContent());
-			Element q = getElement("history", id);
-			history.set(q.getAttribute("flag"), q.getAttribute("value"));
-			Node redirect = q.getElementsByTagName("redirect").item(0);
+			Element h = getElement("history", id);
+			player.getHistory().set(h.getAttribute("flag"), h.getAttribute("value"));
+			Node redirect = h.getElementsByTagName("redirect").item(0);
+			select(redirect);
+			break;
+		case "quest":
+			id = Integer.parseInt(optionNode.getAttributes().getNamedItem("id")
+					.getTextContent());
+			Element q = getElement("quest", id);
+			String path = q.getAttribute("path");
+			HashMap<String, Quest> quests = player.getHistory().getQuests();
+			if(!quests.containsKey(path)){
+				quests.put(path, ItemLoader.getQuest(path));
+			}
+			Quest quest = quests.get(path);
+			NodeList objectiveNodes = q.getElementsByTagName("objective");
+			for(int i=0; i<objectiveNodes.getLength(); i++){
+				Node oNode = objectiveNodes.item(i);
+				id = Integer.parseInt(oNode.getAttributes().getNamedItem("id").getTextContent());
+				if(oNode.getAttributes().getNamedItem("complete").getTextContent().equals("true")) {
+					quest.getObjectives().get(id).complete();
+				}
+				quest.getObjectives().get(id).discover();
+			}
+			redirect = q.getElementsByTagName("redirect").item(0);
 			select(redirect);
 			break;
 		case "quit":
@@ -133,7 +163,7 @@ public class DialogPanel {
 						.getNamedItem("path").getTextContent();
 				int quantity = Integer.parseInt(items.item(i).getAttributes()
 						.getNamedItem("quantity").getTextContent());
-				inv.addFromFile(filePath, quantity);
+				player.getInv().addFromFile(filePath, quantity);
 				System.out.println("added " + quantity + " " + filePath
 						+ " to inventory");
 			}
@@ -147,8 +177,8 @@ public class DialogPanel {
 						.getNamedItem("name").getTextContent();
 				int quantity = Integer.parseInt(items.item(i).getAttributes()
 						.getNamedItem("quantity").getTextContent());
-				if (inv.count(name) >= quantity) {
-					inv.remove(name, quantity);
+				if (player.getInv().count(name) >= quantity) {
+					player.getInv().remove(name, quantity);
 					System.out.println("removed " + quantity + " " + name
 							+ " from inventory");
 				} else {
@@ -239,7 +269,7 @@ public class DialogPanel {
 		private int selected = 0;
 
 		public OptionPanel() {
-			setButtons(getOptionButtons(0));
+			setButtons(new ArrayList<OptionButton>());
 		}
 
 		private ArrayList<OptionButton> getOptionButtons(int id) {
@@ -315,7 +345,7 @@ public class DialogPanel {
 		private ArrayList<String> list;
 
 		public NPCTextPanel() {
-			this.setText(getNPCText(0));
+			this.setText("");
 		}
 
 		private String getNPCText(int id) {

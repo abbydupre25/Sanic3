@@ -7,6 +7,7 @@ import game.states.ExploreState;
 import game.states.InventoryState;
 import game.states.MenuState;
 import game.states.PausedState;
+import game.states.QuestLogState;
 import game.util.ItemLoader;
 
 import org.newdawn.slick.AppGameContainer;
@@ -31,6 +32,7 @@ public class Game extends StateBasedGame {
 		this.addState(new ExploreState(Defines.ID_EXPLORE, player, gui));
 		this.addState(new InventoryState(Defines.ID_INV, player));
 		this.addState(new PausedState(Defines.ID_PAUSED));
+		this.addState(new QuestLogState(Defines.ID_QUEST, player));
 		this.enterState(Defines.ID_MENU);
 	}
 	

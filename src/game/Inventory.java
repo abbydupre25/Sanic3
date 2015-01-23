@@ -87,6 +87,7 @@ public class Inventory {
 		Item i = items.get(index);
 		i.setPos(owner.getPos().clone());
 		i.setOnMap(true);
+		i.actionOnDrop();
 		owner.getRequests().add(i);
 		items.remove(i);
 	}

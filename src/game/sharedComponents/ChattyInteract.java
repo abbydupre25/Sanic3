@@ -3,7 +3,6 @@ package game.sharedComponents;
 import game.GameObject;
 import game.component.InteractComponent;
 import game.gui.GUI;
-import game.player.Player;
 
 import org.newdawn.slick.GameContainer;
 

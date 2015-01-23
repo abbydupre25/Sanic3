@@ -24,5 +24,9 @@ public class ItemInteract extends InteractComponent {
 	protected void initModifierDependents() {
 		
 	}
+	
+	public void actionOnDrop() {
+		// Useful to override
+	}
 
 }

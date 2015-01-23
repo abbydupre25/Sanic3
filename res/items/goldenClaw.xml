@@ -3,4 +3,5 @@
 		<name>Golden claw</name>
 		<image>res/goldenClaw.png</image>
 		<desc>It looks familiar. Like from another game. Definitely not one as good as this, amirite?</desc>
+		<dialogFile>res/dialog/clawScript.xml</dialogFile>
 	</item>

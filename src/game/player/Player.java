@@ -68,7 +68,7 @@ public class Player extends GameObject {
 	public void setInv(Inventory inv) {
 		this.inv = inv;
 	}
-	
+
 	public History getHistory() {
 		return history;
 	}
@@ -77,20 +77,25 @@ public class Player extends GameObject {
 		this.history = history;
 	}
 
+	public void setRunSpeed(float speed) {
+		((PlayerPhysics) components.get(ComponentType.PHYSICS))
+				.setRunSpeed(speed);
+	}
+
+	public float getRunSpeed() {
+		return ((PlayerPhysics) components.get(ComponentType.PHYSICS))
+				.getRunSpeed();
+	}
+
 	public void equip(Item item) {
 		for (Effect e : item.getEffects()) {
 			if (stats.containsKey(e.getStat())) {
 				float originalValue = stats.get(e.getStat());
-				stats.remove(e.getStat());
 				stats.put(e.getStat(), originalValue + e.getBoost());
 			} else {
 				stats.put(e.getStat(), e.getBoost());
 			}
-			if (e.getStat().equals("speed")) { // TODO magic
-				PlayerPhysics physics = ((PlayerPhysics) components
-						.get(ComponentType.PHYSICS));
-				physics.setSpeed(physics.getSpeed() + e.getBoost());
-			}
+			addSpeed(e, true);
 		}
 	}
 
@@ -99,11 +104,20 @@ public class Player extends GameObject {
 			float originalValue = stats.get(e.getStat());
 			stats.remove(e.getStat());
 			stats.put(e.getStat(), originalValue - e.getBoost());
-			if (e.getStat().equals("speed")) { // TODO magic
-				PlayerPhysics physics = ((PlayerPhysics) components
-						.get(ComponentType.PHYSICS));
-				physics.setSpeed(physics.getSpeed() - e.getBoost());
-			}
+			addSpeed(e, false);
+		}
+	}
+
+	private void addSpeed(Effect e, boolean positive) {
+		int x = positive ? 1 : -1;
+		if (e.getStat().equals("speed")) { // TODO remove magic
+			PlayerPhysics physics = ((PlayerPhysics) components
+					.get(ComponentType.PHYSICS));
+			physics.setSpeed(physics.getSpeed() + e.getBoost() * x);
+		} else if (e.getStat().equals("runSpeed")) {
+			PlayerPhysics physics = ((PlayerPhysics) components
+					.get(ComponentType.PHYSICS));
+			physics.setRunSpeed(physics.getRunSpeed() + e.getBoost() * x);
 		}
 	}
 

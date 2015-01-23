@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Here is a basic dialog tree -->
+	<npc name="Steve"> <!-- Names are not currently used -->
+	
+		<!-- The init line directs the program to the first dialog.
+			Action can also reference switches, but for basic chat you should always use dialog.-->
+		<init action="dialog" id="0"></init>
+		
+		<!-- A dialog element refers to the text + option combo that the player sees.-->
+		<dialog id="0">
+			<!-- The NPC text is defined in <text>. It can be as long as you want, extending
+				multiple pages.-->
+			<text>Patrolling the Mojave almost makes me wish for a nuclear winter.</text>
+			
+			<!-- Options contain text that the player views, as well as directions for the parser.
+				Like in <init>, the action and id will direct the program to other elements in this 
+				file. The number of options is currently limited by the amount of space. Options
+				also cannot word-wrap like the NPC text can.-->
+			<option action="dialog" id="1">What's it like in the NCR?</option>
+			<option action="dialog" id="2">How do I get to Novac?</option>
+			
+			<!-- "quit" is a special command that ends the conversation -->
+			<option action="quit">I have to go now</option>
+		</dialog>
+		<dialog id="1">
+			<text>It's okay, I guess.</text>
+			<!-- Options can direct the program to earlier dialogs in the file -->
+			<option action="dialog" id="0">K</option>
+			<option action="quit">I have to go now</option>
+		</dialog>
+		<dialog id="2">
+			<text>Take a left just past the crucifixions</text>
+			<option action="quit">Bye</option>
+		</dialog>
+	</npc>

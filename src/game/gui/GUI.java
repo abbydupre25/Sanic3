@@ -1,30 +1,18 @@
 package game.gui;
 
 import game.Defines;
-import game.History;
-import game.Inventory;
 import game.player.Player;
+import game.util.ItemLoader;
 
-import java.awt.List;
 import java.io.File;
-import java.util.ArrayList;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
-import org.lwjgl.input.Keyboard;
-import org.newdawn.slick.Color;
-import org.newdawn.slick.Font;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.TrueTypeFont;
-import org.newdawn.slick.UnicodeFont;
-import org.newdawn.slick.font.effects.ColorEffect;
-import org.newdawn.slick.geom.RoundedRectangle;
-import org.newdawn.slick.gui.GUIContext;
-import org.newdawn.slick.gui.TextField;
 import org.w3c.dom.Document;
 
 public class GUI {
@@ -35,13 +23,11 @@ public class GUI {
 	private TrueTypeFont font;
 	private DialogPanel dp;
 	private GameContainer gc;
-	private Inventory inv;
-	private History history;
+	private Player player;
 	
 	public GUI(GameContainer container, Player player) throws SlickException {
 		this.gc = container;
-		this.inv = player.getInv();
-		this.history = player.getHistory();
+		this.player = player;
 		width = Defines.WINDOW_WIDTH-20;
 		height = 120;
 		x = 10;
@@ -52,21 +38,16 @@ public class GUI {
 		dp.setVisible(false);
 	}
 	
-	// TODO optimize by taking preloaded 'doc' as input
 	public void startDialog(String filePath) {
-		File file = new File(filePath);
-		Document doc = null;
-		try {
-			 DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-			 DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-			 doc = dBuilder.parse(file);
-			 doc.getDocumentElement().normalize();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		dp = new DialogPanel(doc, width, height, x, y, font, inv, history);
+		Document doc = ItemLoader.getDoc(filePath);
+		dp = new DialogPanel(doc, width, height, x, y, font, player);
 		dp.setVisible(true);
 		gc.getInput().clearKeyPressedRecord();
+	}
+	
+	public void startScript(String filePath) {
+		Document doc = ItemLoader.getDoc(filePath);
+		ScriptRunner sr = new ScriptRunner(doc, player);
 	}
 	
 	public void update() {

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<quest name="Getting the golden claw">
+		<desc>Belethor is willing to give you some fast boots if you find the golden claw</desc>
+		<objective id="0">
+			<text>Retrieve the golden claw</text>
+		</objective>
+		<objective id="1">
+			<text>Give the golden claw to Belethor</text>
+		</objective>
+	</quest>

@@ -10,6 +10,7 @@
 		<dialog id="1">
 			<text>All this stuff</text>
 			<option action="switch" id="0">One sword please [200 rangs]</option>
+			<option action="dialog" id="10">I'll take le complementary fedora</option>
 			<option action="switch" id="1">Nevermind, I don't want to buy anything</option>
 		</dialog>
 		<switch id="0" context="bank" item="200">
@@ -26,10 +27,11 @@
 			<text>You can't afford that!</text>
 			<option action="quit">Where am I going to find rangs?</option>
 		</dialog>
-		<switch id="1" context="history" item="questClaw">
+		<switch id="1" context="history" item="res/quests/clawQuest.xml">
 			<case value="done" action="dialog" id="5"></case>
 			<case value="undiscovered" action="dialog" id="0"></case>
-			<case value="pending" action="switch" id="2"></case>
+			<case value="0" action="dialog" id="6"></case>
+			<case value="1" action="dialog" id="8"></case>
 		</switch>
 		<switch id="2" context="inv" item="Golden claw">
 			<case value="true" action="dialog" id="8"></case>
@@ -37,15 +39,17 @@
 		</switch>
 		<dialog id="4">
 			<text>I'll give you some fast boots if you retrieve the golden claw...</text>
-			<option action="history" id="0">Deal</option>
+			<option action="quest" id="0">Deal</option>
 			<option action="quit">Not this shit again</option>
 		</dialog>
-		<history id="0" flag="questClaw" value="pending">
+		<quest id="0" path="res/quests/clawQuest.xml">
+			<objective id="0" complete="false"></objective>
 			<redirect action="dialog" id="7"></redirect>
-		</history>
-		<history id="1" flag="questClaw" value="done">
+		</quest>
+		<quest id="1" path="res/quests/clawQuest.xml">
+			<objective id="1" complete="true"></objective>
 			<redirect action="dialog" id="7"></redirect>
-		</history>
+		</quest>
 		<dialog id="5">
 			<text>Welcome to Belethor's! If I had a sister, I'd sell her in a second!</text>
 			<option action="dialog" id="1">What do you have for sale?</option>
@@ -70,8 +74,13 @@
 		</dialog>
 		<dialog id="9">
 			<text>Excellent! Here are your fast boots, as promised.</text>
-			<option action="history" id="1">Thanks</option>
+			<option action="quest" id="1">Thanks</option>
 			<giveItem path="res/items/fastBoots.xml" quantity="1"></giveItem>
 			<getItem name="Golden claw" quantity="1"></getItem>
+		</dialog>
+		<dialog id="10">
+			<text>Fedora get</text>
+			<option action="switch" id="1">M'lady</option>
+			<giveItem path="res/items/fastHat.xml" quantity="1"></giveItem>
 		</dialog>
 	</npc>

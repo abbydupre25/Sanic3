@@ -2,7 +2,9 @@
 	<item>
 		<name>Fast Boots</name>
 		<image>res/fastBoots.png</image>
-		<effect stat="speed" boost=".5"></effect>
-		<desc>2 go fest. No other option here.</desc>
+		<effect stat="runSpeed" boost=".25"></effect>
+		<effect stat="speed" boost = ".05"></effect>
+		<ability move="run"></ability>
+		<desc>Press shift 2 go fest. No other option here.</desc>
 		<type>shoes</type>
 	</item>
