@@ -6,6 +6,7 @@ import game.player.Player;
 
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Music;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
@@ -14,6 +15,8 @@ public class ExploreState extends BasicGameState {
 	private int id;
 	private GUI gui;
 	private Player player;
+	
+	private Music music;
 
 	public ExploreState(int id, Player player, GUI gui) {
 		this.id = id;
@@ -24,7 +27,9 @@ public class ExploreState extends BasicGameState {
 	@Override
 	public void init(GameContainer gc, StateBasedGame sbg)
 			throws SlickException {
-
+		music = new Music("res/audio/greenHill.ogg");
+		music.loop();
+		music.setVolume(0.01f);
 	}
 
 	@Override

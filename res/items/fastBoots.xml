@@ -4,7 +4,9 @@
 		<image>res/fastBoots.png</image>
 		<effect stat="runSpeed" boost=".25"></effect>
 		<effect stat="speed" boost = ".05"></effect>
-		<ability move="run"></ability>
+		<ability move="run">
+			<sound>res/audio/spinDash.ogg</sound>
+		</ability>
 		<desc>Press shift 2 go fest. No other option here.</desc>
 		<type>shoes</type>
 	</item>

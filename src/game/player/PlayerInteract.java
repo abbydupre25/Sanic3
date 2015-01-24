@@ -55,9 +55,11 @@ public class PlayerInteract extends InteractComponent {
 		case ACTION_PAUSE:
 			gameObject.getGame().enterState(Defines.ID_PAUSED);
 			gc.getInput().clearKeyPressedRecord();
+			break;
 		case ACTION_QUEST:
 			gameObject.getGame().enterState(Defines.ID_QUEST);
 			gc.getInput().clearKeyPressedRecord();
+			break;
 		default:
 			break;
 		}

@@ -130,6 +130,7 @@ public class QuestPanel {
 		Input input = gc.getInput();
 		if(input.isKeyPressed(MoveKey.QUEST.get())) {
 			sbg.enterState(Defines.ID_EXPLORE);
+			input.clearKeyPressedRecord();
 		} else if (input.isKeyPressed(MoveKey.MOVE_DOWN.get())) {
 			selectPanel.shiftSelected(1);
 		} else if (input.isKeyPressed(MoveKey.MOVE_UP.get())) {

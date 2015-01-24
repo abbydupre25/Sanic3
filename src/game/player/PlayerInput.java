@@ -35,6 +35,9 @@ public class PlayerInput extends InputComponent {
 						for (Ability a : gs.getGear().getAbilities()) {
 							if (a.isBeingInvoked(input)) {
 								action = a.getAction();
+								a.playSound();
+							} else if (a.isPlayingSound()) {
+								a.stopSound();
 							}
 						}
 					}

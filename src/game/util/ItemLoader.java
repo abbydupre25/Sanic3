@@ -154,8 +154,14 @@ public class ItemLoader {
 		ArrayList<Ability> abilities = new ArrayList<Ability>();
 		for (int i = 0; i < abilityNodes.getLength(); i++) {
 			Node n = abilityNodes.item(i);
+			Element e = (Element) n;
 			String move = n.getAttributes().getNamedItem("move")
 					.getTextContent();
+			NodeList soundNodes = e.getElementsByTagName("sound");
+			String soundPath = null;
+			if(soundNodes.getLength() > 0) {
+				soundPath = soundNodes.item(0).getTextContent();
+			}
 			Action action = null;
 			MoveKey key = null;
 			Ability.InputType inputType = null;
@@ -166,7 +172,12 @@ public class ItemLoader {
 				inputType = Ability.InputType.KEY_DOWN;
 				break;
 			}
-			abilities.add(new Ability(action, key, inputType));
+			try {
+				abilities.add(new Ability(action, key, inputType, soundPath));
+			} catch (SlickException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 		}
 
 		// Use dialog files as scripts for use on pickup
