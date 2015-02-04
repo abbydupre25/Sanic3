@@ -15,7 +15,7 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
 
-public class Game extends StateBasedGame {
+public class Game extends StateBasedGame {	
 	public Game(String title) throws SlickException{
 		super(title);
 		ItemLoader.setGame(this);
@@ -29,11 +29,11 @@ public class Game extends StateBasedGame {
 		ItemLoader.setGUI(gui);
 		MapLoader.load(gc, this, player);
 		this.addState(new MenuState(Defines.ID_MENU));
+		this.enterState(Defines.ID_MENU);
 		this.addState(new ExploreState(Defines.ID_EXPLORE, player, gui));
 		this.addState(new InventoryState(Defines.ID_INV, player));
 		this.addState(new PausedState(Defines.ID_PAUSED));
 		this.addState(new QuestLogState(Defines.ID_QUEST, player));
-		this.enterState(Defines.ID_MENU);
 	}
 	
 	public static void main(String[] arguments) {

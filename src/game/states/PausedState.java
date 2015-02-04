@@ -1,18 +1,20 @@
 package game.states;
 
 import game.Defines;
+import game.gui.PausedPanel;
 
-import org.lwjgl.input.Keyboard;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Input;
+import org.newdawn.slick.Music;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
 public class PausedState extends BasicGameState {
 	private int id;
-	private int selected = 1;
+	private PausedPanel panel;
+	private Music music;
 	
 	public PausedState(int id) {
 		this.id = id;
@@ -21,42 +23,26 @@ public class PausedState extends BasicGameState {
 	@Override
 	public void init(GameContainer gc, StateBasedGame sbc)
 			throws SlickException {
+		java.awt.Font awtFont = new java.awt.Font("Verdana", java.awt.Font.BOLD, 14);
+		TrueTypeFont font = new TrueTypeFont(awtFont, false);
 		
+		music = new Music("res/audio/greenHill.ogg");
+		music.loop();
+		music.setVolume(0.01f);
+		
+		panel = new PausedPanel(20, 20, Defines.WINDOW_WIDTH-40, Defines.WINDOW_HEIGHT-40, font, music);
 	}
 
 	@Override
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g)
 			throws SlickException {
-		int x = Defines.WINDOW_WIDTH/2 - 50;
-		int y = 60;
-		int space = 20;
-		g.drawString("PAUSED", x, y);
-		g.drawString("Resume game", x, y+space);
-		g.drawString("Quit", x, y+space*2);
-		g.drawRoundRect(x, y+space*selected, 200, space, 5);
+		panel.render(g);
 	}
 
 	@Override
-	public void update(GameContainer gc, StateBasedGame sbg, int g)
+	public void update(GameContainer gc, StateBasedGame sbg, int delta)
 			throws SlickException {
-		Input input = gc.getInput();
-		if(input.isKeyPressed(Keyboard.KEY_ESCAPE)) {
-			sbg.enterState(Defines.ID_EXPLORE);
-			gc.getInput().clearKeyPressedRecord();
-		} else if (input.isKeyPressed(Keyboard.KEY_S)) {
-			selected = 2;
-		} else if (input.isKeyPressed(Keyboard.KEY_W)) {
-			selected = 1;
-		} else if (input.isKeyPressed(Keyboard.KEY_RETURN)) {
-			switch(selected){
-			case 1:
-				sbg.enterState(Defines.ID_EXPLORE);
-				gc.getInput().clearKeyPressedRecord();
-				break;
-			case 2:
-				System.exit(0);
-			}
-		}
+		panel.update(gc, sbg, delta);
 	}
 
 	@Override

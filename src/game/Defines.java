@@ -14,6 +14,8 @@ public class Defines {
 	public static final int ID_INV = 2;
 	public static final int ID_PAUSED = 3;
 	public static final int ID_QUEST = 4;
+	
+	public static float soundVolume = 0.5f;
 		
 	public enum MoveDir {
 		MOVE_NULL, MOVE_UP, MOVE_DOWN, MOVE_LEFT, MOVE_RIGHT

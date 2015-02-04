@@ -45,7 +45,7 @@ public class Ability {
 	
 	public void playSound() {
 		if(sound != null) {
-			sound.play();
+			sound.play(1.0f, Defines.soundVolume);
 		}
 	}
 	

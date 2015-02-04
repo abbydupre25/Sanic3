@@ -16,8 +16,6 @@ public class ExploreState extends BasicGameState {
 	private GUI gui;
 	private Player player;
 	
-	private Music music;
-
 	public ExploreState(int id, Player player, GUI gui) {
 		this.id = id;
 		this.player = player;
@@ -27,9 +25,7 @@ public class ExploreState extends BasicGameState {
 	@Override
 	public void init(GameContainer gc, StateBasedGame sbg)
 			throws SlickException {
-		music = new Music("res/audio/greenHill.ogg");
-		music.loop();
-		music.setVolume(0.01f);
+		
 	}
 
 	@Override
